@@ -18,7 +18,7 @@ public class MergeTask extends SnapShotTask<List<MergeTask.MergeParam>, Void> {
                     .run(AppExecutor.current()).progress().observe(new Observer<Progress>() {
                 @Override
                 public void onChanged(Progress progress) {
-                    progress.init(progress.handled(), progress.total());
+                    progress.init(progress.handled, progress.total);
                     publishProgressChanged(progress);
                 }
             });

@@ -1,5 +1,6 @@
 package com.zero.support.compat;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class ActivityManager {
     private static final List<Activity> activities = new ArrayList<>();
     private static final List<BaseWindow> windows = new ArrayList<>();
     private static final Map<IBinder, WindowInfo> windowInfoList = new HashMap<>();
+    @SuppressLint("StaticFieldLeak")
     private static Activity mTopActivity;
 
     static final Application.ActivityLifecycleCallbacks callbacks = new Application.ActivityLifecycleCallbacks() {
