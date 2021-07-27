@@ -15,7 +15,7 @@ public class PackageModelLoader implements ModelLoader<PackageInfo, Drawable> {
     @Nullable
     @Override
     public LoadData<Drawable> buildLoadData(@NonNull PackageInfo info, int width, int height, @NonNull Options options) {
-        return new LoadData<>(new ObjectKey(info.packageName), new PakcageDataFetcher(info));
+        return new LoadData<>(new ObjectKey(info.packageName), new PackageDataFetcher(info));
     }
 
 

@@ -12,10 +12,10 @@ import com.bumptech.glide.load.data.DataFetcher;
 import com.zero.support.compat.AppGlobal;
 
 
-public class PakcageDataFetcher implements DataFetcher<Drawable> {
+public class PackageDataFetcher implements DataFetcher<Drawable> {
     private PackageInfo model;
 
-    public PakcageDataFetcher(PackageInfo model) {
+    public PackageDataFetcher(PackageInfo model) {
         this.model = model;
     }
 
