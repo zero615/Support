@@ -11,7 +11,15 @@ public abstract class ResourceViewModel<Param, Result> extends SupportViewModel 
         protected Response<Result> performExecute(Param param) {
             return ResourceViewModel.this.performExecute(param);
         }
+
+        @Override
+        protected void onReceiveResponse(Response<Result> response) {
+            ResourceViewModel.this.onReceiveResponse(response);
+        }
     };
+
+    protected void onReceiveResponse(Response<Result> response) {
+    }
 
     public Observable<Resource<Result>> resource() {
         return request.resource();

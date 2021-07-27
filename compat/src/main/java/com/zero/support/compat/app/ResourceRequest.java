@@ -29,9 +29,14 @@ public abstract class ResourceRequest<Param, T> {
         resource.setValue(Resource.loading(data));
         getBackgroundExecutor().execute(() -> {
             Response<T> response = performExecute(param);
+            onReceiveResponse(response);
             Resource<T> resource = covertToResource(response);
             AppExecutor.main().execute(() -> ResourceRequest.this.resource.setValue(resource));
         });
+    }
+
+    protected void onReceiveResponse(Response<T> response) {
+        
     }
 
     private Resource<T> covertToResource(Response<T> response) {
