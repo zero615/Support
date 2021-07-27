@@ -33,6 +33,13 @@ public class BindUtil {
             imageView.setImageDrawable((Drawable) model);
         } else if (model instanceof Integer) {
             imageView.setImageResource((Integer) model);
+        } else if (model instanceof ImageModel) {
+            ImageModel imageModel = (ImageModel) model;
+            Glide.with(imageView.getContext())
+                    .load(imageModel.model)
+                    .placeholder(imageModel.placeHolder)
+                    .error(imageModel.error)
+                    .into(imageView);
         } else {
             Glide.with(imageView.getContext())
                     .load(model)
