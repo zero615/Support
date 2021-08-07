@@ -7,6 +7,7 @@ import com.zero.support.work.AppExecutor;
 import com.zero.support.work.Observable;
 import com.zero.support.work.Response;
 import com.zero.support.work.SerialExecutor;
+import com.zero.support.work.WorkExceptionConverter;
 
 import java.util.Collection;
 import java.util.concurrent.Executor;
@@ -20,23 +21,38 @@ public abstract class ResourceRequest<Param, T> {
         return resource;
     }
 
-
     public void notifyDataSetChanged(Param param) {
-        dispatchRefresh(param, data);
+        dispatchRefresh(getBackgroundExecutor(), AppExecutor.main(), param, data);
     }
 
-    private void dispatchRefresh(Param param, T data) {
-        resource.setValue(Resource.loading(data));
-        getBackgroundExecutor().execute(() -> {
-            Response<T> response = performExecute(param);
+    public void notifyDataSetChanged(Executor executor, Executor postExecutor, Param param) {
+        dispatchRefresh(executor, postExecutor, param, data);
+    }
+
+    private void dispatchRefresh(Executor executor, Executor postExecutor, Param param, T data) {
+        postExecutor.execute(() -> {
+            Resource<T> resource = Resource.loading(data);
+            onResourceChanged(resource);
+            ResourceRequest.this.resource.setValue(resource);
+        });
+        executor.execute(() -> {
+            Response<T> response = dispatchPerformExecute(param);
             onReceiveResponse(response);
             Resource<T> resource = covertToResource(response);
-            AppExecutor.main().execute(() -> ResourceRequest.this.resource.setValue(resource));
+            postExecutor.execute(() -> {
+                onResourceChanged(resource);
+                ResourceRequest.this.resource.setValue(resource);
+            });
         });
     }
 
+
+    protected void onResourceChanged(Resource<T> resource) {
+
+    }
+
     protected void onReceiveResponse(Response<T> response) {
-        
+
     }
 
     private Resource<T> covertToResource(Response<T> response) {
@@ -70,5 +86,13 @@ public abstract class ResourceRequest<Param, T> {
         return executor;
     }
 
-    protected abstract Response<T> performExecute(Param param);
+    protected Response<T> dispatchPerformExecute(Param param) {
+        try {
+            return Response.success(performExecute(param));
+        } catch (Throwable e) {
+            return Response.error(WorkExceptionConverter.convert(e), e);
+        }
+    }
+
+    protected abstract T performExecute(Param param);
 }

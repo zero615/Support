@@ -21,6 +21,7 @@ public class TextDividerDecoration extends RecyclerView.ItemDecoration {
         this.text = text;
         paint.setTextSize(size);
         paint.setColor(color);
+        paint.setAntiAlias(true);
         metrics = paint.getFontMetrics();
         paint.getTextBounds(text, 0, text.length(), bounds);
     }

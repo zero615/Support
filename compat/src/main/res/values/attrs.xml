@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <declare-styleable name="ZeroResourceLayout">
         <attr name="errorView" format="reference" />
         <attr name="emptyView" format="reference" />
@@ -14,20 +13,12 @@
         <attr name="aspectRatio" format="float" />
         <attr name="layout_widthRatio" format="float" />
         <attr name="layout_heightRatio" format="float" />
-
     </declare-styleable>
 
     <declare-styleable name="ZeroSlideBar">
         <attr name="android:textSize" />
         <attr name="android:textColor" />
-        <attr name="slideBar_chooseTextColor" format="color" />
-        <attr name="slideBar_backgroundColor" format="color" />
-        <attr name="slideBar_chooseBackgroundColor" format="color" />
-        <attr name="slideBar_style">
-            <enum name="default_" value="0" />
-            <enum name="none" value="1" />
-            <enum name="circle" value="2" />
-            <enum name="stretch" value="3" />
-        </attr>
+        <attr name="slideBarFocusTextColor" format="color" />
+        <attr name="slideBarFocusBackgroundColor" format="color" />
     </declare-styleable>
 </resources>

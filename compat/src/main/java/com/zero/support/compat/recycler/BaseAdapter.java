@@ -11,7 +11,6 @@ import androidx.databinding.OnRebindCallback;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.zero.support.compat.recycler.manager.StickyHeaders;
 
 import java.util.List;
@@ -97,6 +96,19 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<ItemViewHolder> i
     public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
         this.mOnItemLongClickListener = onItemLongClickListener;
     }
+
+    public void performClick(View view, ItemViewHolder holder) {
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick(view, holder);
+        }
+    }
+
+    public void performLongClick(View view, ItemViewHolder holder) {
+        if (mOnItemLongClickListener != null) {
+            mOnItemLongClickListener.onItemLongClick(view, holder);
+        }
+    }
+
 
     @Override
     public boolean isStickyHeader(int position) {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+
+        <variable
+            name="resource"
+            type="com.zero.support.compat.vo.Resource" />
+    </data>
+
+
+    <com.zero.support.simple.widget.ResourceLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        resource="@{resource}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+    </com.zero.support.simple.widget.ResourceLayout>
+</layout>
