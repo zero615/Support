@@ -7,6 +7,7 @@ import com.zero.support.work.Observable;
 import com.zero.support.work.Response;
 
 public abstract class ResourceViewModel<Param, Result> extends SupportViewModel {
+    private boolean initialize = true;
     private final ResourceRequest<Param, Result> request = new ResourceRequest<Param, Result>() {
         @Override
         protected Result performExecute(Param param) {
@@ -20,9 +21,16 @@ public abstract class ResourceViewModel<Param, Result> extends SupportViewModel 
 
         @Override
         protected void onResourceChanged(Resource<Result> resource) {
+            if (initialize&&resource.isSuccess()&&!resource.isEmpty()){
+                initialize = false;
+            }
             ResourceViewModel.this.onResourceChanged(resource);
         }
     };
+
+    public final boolean isInitialize() {
+        return initialize;
+    }
 
     protected void onReceiveResponse(Response<Result> response) {
     }
