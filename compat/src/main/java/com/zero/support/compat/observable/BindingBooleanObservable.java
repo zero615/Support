@@ -12,7 +12,7 @@ public class BindingBooleanObservable extends ObservableBoolean implements Obser
 
     public BindingBooleanObservable(Observable<Boolean> observable) {
         this.observable = observable;
-        observable.observe(this, true);
+        observable.observe(this);
     }
 
     @Override

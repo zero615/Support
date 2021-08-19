@@ -15,6 +15,7 @@ public class Snapshot {
         if (snapshot != null) {
             this.status = snapshot.status;
             this.progress = snapshot.progress;
+            this.response = snapshot.response;
         }
     }
 

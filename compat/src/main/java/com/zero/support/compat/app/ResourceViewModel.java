@@ -1,6 +1,7 @@
 package com.zero.support.compat.app;
 
 
+import com.zero.support.compat.util.ResourceRequest;
 import com.zero.support.compat.vo.Resource;
 import com.zero.support.work.Observable;
 import com.zero.support.work.Response;

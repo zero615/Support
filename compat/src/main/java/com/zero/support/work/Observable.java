@@ -1,8 +1,6 @@
 package com.zero.support.work;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 
 import com.zero.support.work.util.ObservableLiveData;
 
@@ -21,7 +19,7 @@ public class Observable<T> {
         return mObservers;
     }
 
-    private volatile MutableLiveData<T> liveData;
+    private volatile ObservableLiveData<T> liveData;
     private volatile ObservableFuture<T> future;
 
     @SuppressWarnings("ALL")
@@ -37,18 +35,18 @@ public class Observable<T> {
         performDispatch(null, value, mVersion);
     }
 
-    protected synchronized void performDispatch(Observer<T> observer, Object value, int version) {
+    protected void performDispatch(Observer<T> observer, Object value, int version) {
         dispatchValue(observer, value, version);
     }
 
-    protected synchronized void performObserve(Observer<T> observer, boolean weak) {
-        dispatchObserver(observer, weak);
+    protected void performObserve(Observer<T> observer) {
+        dispatchObserver(observer);
     }
 
-    protected final void dispatchObserver(Observer<T> observer, boolean weak) {
+    protected final void dispatchObserver(Observer<T> observer) {
         ObserverWrapper wrapper = mObservers.get(observer);
         if (wrapper == null) {
-            wrapper = new ObserverWrapper(observer, weak);
+            wrapper = new ObserverWrapper(observer);
             mObservers.put(observer, wrapper);
         } else {
             //ignore
@@ -83,7 +81,7 @@ public class Observable<T> {
      */
     public final LiveData<T> asLive() {
         if (liveData == null) {
-            liveData = new ObservableLiveData<>(this, false);
+            liveData = new ObservableLiveData<>(this, NOT_SET);
         }
         return liveData;
     }
@@ -109,17 +107,18 @@ public class Observable<T> {
 
     public synchronized void reset() {
         mValue = NOT_SET;
-        mVersion = START_VERSION;
-        liveData = null;
+        if (liveData != null) {
+            liveData.reset();
+        }
+        if (future!=null){
+            future.reset();
+        }
     }
 
     public final synchronized void observe(Observer<T> observer) {
-        observe(observer, false);
+        performObserve(observer);
     }
 
-    public synchronized void observe(Observer<T> observer, boolean weak) {
-        performObserve(observer, weak);
-    }
 
     public synchronized void observeOnce(final Observer<T> observer) {
         observe(new Observer<T>() {
@@ -144,15 +143,9 @@ public class Observable<T> {
     public class ObserverWrapper {
         private int mLastVersion = START_VERSION;
         private final Observer<T> mObserver;
-        private boolean weak;
 
-        public ObserverWrapper(Observer<T> observer, boolean weak) {
-            if (!weak) {
-                mObserver = observer;
-            } else {
-                mObserver = null;
-            }
-            this.weak = weak;
+        public ObserverWrapper(Observer<T> observer) {
+            mObserver = observer;
         }
 
         public void dispatchValue(Observer<T> observer, T value, int version) {
@@ -161,12 +154,6 @@ public class Observable<T> {
             }
             mLastVersion = version;
             observer.onChanged(value);
-        }
-
-        @Override
-        protected void finalize() throws Throwable {
-            super.finalize();
-
         }
     }
 

@@ -9,7 +9,7 @@ import com.zero.support.work.PromiseObservable;
 
 
 /**
- * Permission
+ * RequestViewModel仅支持 SupportActivity
  */
 public class RequestViewModel extends SupportViewModel {
     private final PromiseObservable<PermissionModel> permissionModels = new PromiseObservable<>();
@@ -17,6 +17,9 @@ public class RequestViewModel extends SupportViewModel {
     private final PromiseObservable<ActivityResultModel> resultModels = new PromiseObservable<>();
 
     private final PromiseObservable<DialogModel> dialogEvent = new PromiseObservable<>();
+
+    private final PromiseObservable<Tip> tipsEvent = new PromiseObservable<>();
+
 
     public LiveData<PermissionModel> obtainPermission() {
         return permissionModels.asLive();
@@ -30,18 +33,48 @@ public class RequestViewModel extends SupportViewModel {
         return dialogEvent.asLive();
     }
 
+    public LiveData<Tip> obtainTipEvent() {
+        return tipsEvent.asLive();
+    }
+
+    @Override
+    protected void onAttachFragment(SupportFragment fragment) {
+        super.onAttachFragment(fragment);
+        throw new IllegalStateException("requestViewModel can not attach with fragment");
+    }
+
     final <T extends DialogModel> T performRequestDialog(@NonNull T model) {
         model.attach(this);
         dialogEvent.setValue(model);
         return model;
     }
 
+    final Tip performRequestTips(@NonNull Tip model) {
+        model.attach(this);
+        tipsEvent.setValue(model);
+        return model;
+    }
+
 
     void removeDialogModel(DialogModel model) {
-        SupportActivity activity = requireActivity();
-        activity.requestRemoveDialog(model);
+        SupportActivity activity = getActivity();
+        if (activity != null) {
+            activity.requestRemoveDialog(model);
+        }
         dialogEvent.remove(model);
         model.detach();
+    }
+
+    void removeTipModel(Tip tip) {
+        SupportActivity activity = getActivity();
+        if (activity != null) {
+            activity.requestRemoveTips(tip);
+        }
+        tipsEvent.remove(tip);
+    }
+
+    Tip getCurrentTip() {
+        return tipsEvent.getValue();
     }
 
     final PermissionModel performRequestPermission(PermissionModel model) {

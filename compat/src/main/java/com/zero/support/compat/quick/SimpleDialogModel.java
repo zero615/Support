@@ -8,6 +8,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
@@ -48,7 +49,7 @@ public class SimpleDialogModel extends DialogModel {
 
     public String getPositive() {
         if (builder.positiveId != 0) {
-            return requireViewModel().requireActivity().getString(builder.negativeId);
+            return requireViewModel().requireActivity().getString(builder.positiveId);
         }
         return builder.positive;
     }
@@ -123,12 +124,29 @@ public class SimpleDialogModel extends DialogModel {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Log.e("xgf", "onClick: "+which );
                 AlertDialog alertDialog = (AlertDialog) dialog;
                 dispatchClickEvent(alertDialog.getButton(which), which);
             }
         };
         builder.setNegativeButton(getNegative(), listener);
         builder.setPositiveButton(getPositive(), listener);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                Log.e("xgf", "onClick: cancel " );
+                dispatchClickEvent(null, DialogInterface.BUTTON_NEUTRAL);
+            }
+        });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Log.e("xgf", "onClick: dismiss " );
+                if (which() == DialogInterface.BUTTON_NEUTRAL) {
+                    dismiss();
+                }
+            }
+        });
         return builder.create();
     }
 

@@ -27,6 +27,10 @@ public class DialogClickEvent {
         return which == DialogInterface.BUTTON_NEGATIVE;
     }
 
+    public boolean isNeutral() {
+        return which == DialogInterface.BUTTON_NEUTRAL;
+    }
+
     public void dismiss() {
         model.dismiss();
     }

@@ -16,13 +16,38 @@ public class ContextViewModel extends ObservableViewModel {
         application = AppGlobal.getApplication();
     }
 
-    void attach(SupportFragment fragment) {
+    void attachFragment(SupportFragment fragment) {
         this.activity = (SupportActivity) fragment.requireActivity();
         this.fragment = fragment;
+        onAttachFragment(fragment);
     }
 
-    void attach(SupportActivity activity) {
+    void attachActivity(SupportActivity activity) {
         this.activity = activity;
+        onAttachActivity(activity);
+    }
+
+    void detachContext() {
+        onDetachContext();
+        fragment = null;
+        activity = null;
+    }
+
+    public boolean isFragment() {
+        return fragment != null;
+    }
+
+    protected void onAttachFragment(SupportFragment fragment) {
+
+    }
+
+
+    protected void onAttachActivity(SupportActivity activity) {
+
+    }
+
+    protected void onDetachContext() {
+
     }
 
     public SupportFragment requireFragment() {
@@ -42,10 +67,6 @@ public class ContextViewModel extends ObservableViewModel {
         return application;
     }
 
-    void detach() {
-        fragment = null;
-        activity = null;
-    }
 
     public SupportActivity getActivity() {
         return activity;

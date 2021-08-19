@@ -3,14 +3,16 @@ package com.zero.support.work;
 import android.os.ConditionVariable;
 
 public class ObservableFuture<T> implements Observer<T> {
-    private volatile ConditionVariable variable = new ConditionVariable();
-    private Observable<T> observable;
+    private final ConditionVariable variable = new ConditionVariable();
+    private final Observable<T> observable;
     private volatile T value;
 
     public ObservableFuture(Observable<T> observable) {
         this.observable = observable;
         value = observable.getValue();
-        observable.observe(this);
+        if (value == null) {
+            observable.observe(this);
+        }
     }
 
     public T getValue() {
@@ -26,5 +28,13 @@ public class ObservableFuture<T> implements Observer<T> {
         observable.remove(this);
         value = t;
         variable.open();
+    }
+
+    public void reset() {
+        if (value != null) {
+            variable.close();
+            value = null;
+            observable.observe(this);
+        }
     }
 }

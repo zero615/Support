@@ -57,22 +57,12 @@ public class PermissionModel extends ActivityModel {
     }
 
     protected void onReceivePermissionEvent(PermissionEvent event) {
-        deliveryEvent(event);
+        dispatchPermissionEvent(event);
     }
 
-    protected final void deliveryEvent(PermissionEvent event) {
+    protected final void dispatchPermissionEvent(PermissionEvent event) {
         observable.setValue(event);
     }
-
-
-    public void subscribe(Object object) {
-
-    }
-
-    boolean shouldShowRation() {
-        return true;
-    }
-
 
     public Observable<PermissionEvent> result() {
         return observable;

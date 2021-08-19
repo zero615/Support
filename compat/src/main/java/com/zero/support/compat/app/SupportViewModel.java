@@ -1,17 +1,17 @@
 package com.zero.support.compat.app;
 
-import android.app.Activity;
 import android.app.Application;
 import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
 import com.zero.support.compat.observable.SingleLiveEvent;
+import com.zero.support.work.AppExecutor;
 
 
 public abstract class SupportViewModel extends ContextViewModel {
     private final SingleLiveEvent<String> messageEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Tip> tipEvent = new SingleLiveEvent<>();
+
 
     private Object mValue;
     private RequestViewModel requestViewModel;
@@ -27,47 +27,29 @@ public abstract class SupportViewModel extends ContextViewModel {
         }
     }
 
-    final void attachRequestViewModel(RequestViewModel viewModel) {
+    final void attachRequestViewModel(RequestViewModel viewModel, SupportFragment fragment) {
         if (this.requestViewModel == null) {
             this.requestViewModel = viewModel;
-            onViewModelCreated();
+            onViewModelCreated(fragment);
         }
+        attachFragment(fragment);
     }
 
-    protected void onViewModelCreated() {
-
-    }
-
-    @Override
-    void attach(SupportActivity activity) {
-        super.attach(activity);
-        if (requestViewModel == null) {
-            requestViewModel = activity.peekViewModel(RequestViewModel.class);
+    final void attachRequestViewModel(RequestViewModel viewModel, SupportActivity activity) {
+        if (this.requestViewModel == null) {
+            this.requestViewModel = viewModel;
+            onViewModelCreated(activity);
         }
-        onAttach(activity);
+        attachActivity(activity);
     }
 
-    protected void onAttach(Activity activity) {
-
-    }
-
-    protected void onDetach() {
+    protected void onViewModelCreated(SupportActivity activity) {
 
     }
 
-    @Override
-    void attach(SupportFragment fragment) {
-        super.attach(fragment);
-        if (requestViewModel == null) {
-            requestViewModel = fragment.peekViewModel(RequestViewModel.class);
-        }
-        onAttach(fragment.requireActivity());
-    }
 
-    @Override
-    void detach() {
-        super.detach();
-        onDetach();
+    protected void onViewModelCreated(SupportFragment fragment) {
+
     }
 
     public <T> T getValue() {
@@ -82,17 +64,23 @@ public abstract class SupportViewModel extends ContextViewModel {
         return messageEvent;
     }
 
-    public LiveData<Tip> obtainTipEvent() {
-        return tipEvent;
-    }
-
 
     public void tip(int type, String message) {
-        tipEvent.setValue(new Tip(type, message));
+        requestTip(new Tip(type, message));
     }
 
     public void postTip(int type, String message) {
-        tipEvent.postValue(new Tip(type, message));
+        final Tip tip = new Tip(type, message);
+        if (AppExecutor.isMainThread()) {
+            requestTip(tip);
+        } else {
+            AppExecutor.main().execute(new Runnable() {
+                @Override
+                public void run() {
+                    requestTip(tip);
+                }
+            });
+        }
     }
 
     public void postMessage(String message) {
@@ -157,17 +145,33 @@ public abstract class SupportViewModel extends ContextViewModel {
 
     public void dismiss() {
         assertMainThread("dismiss");
-        tipEvent.setValue(new Tip(Tip.TYPE_DISMISS, null));
-
+        Tip tip = requestViewModel.getCurrentTip();
+        if (tip != null) {
+            tip.dismiss();
+        }
     }
 
     public void postDismiss() {
-        postTip(Tip.TYPE_DISMISS, null);
+        if (AppExecutor.isMainThread()) {
+            dismiss();
+        } else {
+            AppExecutor.main().execute(new Runnable() {
+                @Override
+                public void run() {
+                    dismiss();
+                }
+            });
+        }
     }
 
 
     public PermissionModel requestPermission(PermissionModel model) {
         return requestViewModel.performRequestPermission(model);
+    }
+
+    public Tip requestTip(Tip tip) {
+        requestViewModel.performRequestTips(tip);
+        return tip;
     }
 
     public DialogModel requestDialog(DialogModel model) {
@@ -180,5 +184,9 @@ public abstract class SupportViewModel extends ContextViewModel {
 
     public void removeDialog(DialogModel model) {
         requestViewModel.removeDialogModel(model);
+    }
+
+    public void removeTip(Tip tip) {
+        requestViewModel.removeTipModel(tip);
     }
 }

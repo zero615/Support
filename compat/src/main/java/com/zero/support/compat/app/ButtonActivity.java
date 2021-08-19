@@ -12,7 +12,7 @@ import android.widget.ScrollView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ButtonActivity extends AppCompatActivity {
+public class ButtonActivity extends SupportActivity {
     String TAG = getClass().getSimpleName();
     private LinearLayout mContainer;
 
@@ -69,11 +69,12 @@ public class ButtonActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy: ");
     }
 
-    protected void addButton(String text, View.OnClickListener clickListener) {
+    protected Button addButton(String text, View.OnClickListener clickListener) {
         Button button = new Button(this);
         button.setText(text);
         button.setOnClickListener(clickListener);
         mContainer.addView(button, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return button;
     }
 
 

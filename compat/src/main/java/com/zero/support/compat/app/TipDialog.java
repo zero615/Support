@@ -13,14 +13,7 @@ import androidx.annotation.NonNull;
 import com.zero.support.compat.R;
 
 public class TipDialog extends Dialog {
-    private Runnable mDismissDaemon = new Runnable() {
-        @Override
-        public void run() {
-            if (isShowing()) {
-                dismiss();
-            }
-        }
-    };
+
 
     private TextView textView;
     private SparseArray<View> views = new SparseArray<>();
@@ -42,6 +35,7 @@ public class TipDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_common_tip);
         textView = findViewById(R.id.tip_message);
         views.put(Tip.TYPE_FAIL, findViewById(R.id.tip_error));
@@ -51,10 +45,6 @@ public class TipDialog extends Dialog {
     }
 
     public void dispatchTipEvent(Tip tip) {
-        if (tip.type == Tip.TYPE_DISMISS) {
-            dismiss();
-            return;
-        }
         View view = views.get(tip.type);
         if (view != current) {
             if (current != null) {
@@ -68,34 +58,6 @@ public class TipDialog extends Dialog {
         } else {
             textView.setVisibility(View.GONE);
         }
-        if (tip.type == Tip.TYPE_SUCCESS) {
-            showWithDaemon(700);
-        } else {
-            showWithDaemon(1500);
-        }
-    }
-
-
-    public void showWithDaemon(long delayMillis) {
-        if (!isShowing()) {
-            show();
-        }
-        dismissWithDaemon(delayMillis);
-    }
-
-    public void dismissWithDaemon(long delayMillis) {
-        Window window = getWindow();
-        if (window == null) {
-            return;
-        }
-        window.getDecorView().removeCallbacks(mDismissDaemon);
-        window.getDecorView().postDelayed(mDismissDaemon, delayMillis);
-
-    }
-
-    @Override
-    public void show() {
-        super.show();
     }
 
 }

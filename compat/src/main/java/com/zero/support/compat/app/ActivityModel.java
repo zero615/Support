@@ -15,5 +15,7 @@ public class ActivityModel {
         return viewModel;
     }
 
-
+    public boolean isAttached() {
+        return viewModel != null;
+    }
 }

@@ -1,6 +1,7 @@
 package com.zero.support.compat.app;
 
 import android.app.Dialog;
+import android.util.Log;
 import android.view.View;
 
 import com.zero.support.work.Observable;
@@ -8,15 +9,12 @@ import com.zero.support.work.Observable;
 public abstract class DialogModel extends ActivityModel {
     private final Observable<DialogClickEvent> observable = new Observable<>();
     private Dialog dialog;
-    private boolean dismiss;
-    private boolean clicked;
     private int which;
     private String dialogName;
 
     public boolean isEnableCached() {
         return false;
     }
-
 
     public String getDialogName() {
         return dialogName;
@@ -33,40 +31,42 @@ public abstract class DialogModel extends ActivityModel {
         return observable;
     }
 
-
-    public final void show(Dialog dialog) {
+    final void show(Dialog dialog) {
+        which = 0;
         this.dialog = dialog;
-        if (clicked) {
-            clicked = false;
-            dismiss = false;
-            which = 0;
-        }
-        if (!dismiss) {
-            dialog.show();
-        } else {
-            dialog.dismiss();
-        }
+        this.dialog.show();
+        onBindDialog(dialog);
     }
 
+    protected void onBindDialog(Dialog dialog) {
+
+    }
 
     public boolean isClicked() {
         return which != 0;
     }
 
 
-    public final Dialog requireDialog() {
+    public Dialog getDialog() {
         return dialog;
     }
 
-    public void detachDialog(Dialog dialog) {
-        if (this.dialog == dialog) {
+    public final Dialog requireDialog() {
+        final Dialog dialog = this.dialog;
+        if (dialog == null) {
+            throw new IllegalStateException("dialog is null");
+        }
+        return dialog;
+    }
+
+    void detachDialog(Dialog dialog) {
+        if (this.dialog == dialog && dialog != null) {
             dialog.dismiss();
             this.dialog = null;
         }
     }
 
     public void dismiss() {
-        dismiss = true;
         SupportViewModel viewModel = requireViewModel();
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
@@ -78,10 +78,13 @@ public abstract class DialogModel extends ActivityModel {
     }
 
     public final void dispatchClickEvent(View view, int which) {
-        this.clicked = true;
-        this.which = which;
-        onClick(view, which);
-        observable.setValue(new DialogClickEvent(this, which));
+        if (dialog!=null){
+            this.which = which;
+            onClick(view, which);
+            observable.setValue(new DialogClickEvent(this, which));
+        }else {
+            Log.e("dialog", "dispatchClickEvent: ignore, reason : dismiss" );
+        }
     }
 
 

@@ -288,14 +288,16 @@ public abstract class Task<Param, Result> {
 
     private class TaskObservable<T> extends Observable<T> {
         @Override
-        protected synchronized void performObserve(Observer<T> observer, boolean weak) {
+        protected synchronized void performObserve(Observer<T> observer) {
             if (dispatchExecutor != AppExecutor.current()) {
                 dispatchExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        dispatchObserver(observer, weak);
+                        dispatchObserver(observer);
                     }
                 });
+            }else {
+                dispatchObserver(observer);
             }
         }
     }

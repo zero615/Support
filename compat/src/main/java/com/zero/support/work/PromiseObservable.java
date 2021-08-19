@@ -55,5 +55,12 @@ public class PromiseObservable<T> extends SerialObservable<T> {
         promiseNext();
     }
 
+    public synchronized boolean contains(T value) {
+        if (mValue == value) {
+            return true;
+        }
+        return promises.contains(value);
+    }
+
 
 }

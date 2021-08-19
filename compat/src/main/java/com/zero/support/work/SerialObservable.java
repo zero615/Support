@@ -20,16 +20,16 @@ public class SerialObservable<T> extends Observable<T> {
 
     @Override
     protected void performDispatch(Observer<T> observer, Object value, int version) {
-        mExecutor.execute(new PostRunnable(observer, value, version, false, false));
+        mExecutor.execute(new PostRunnable(observer, value, version, false));
     }
 
     @Override
-    protected synchronized void performObserve(Observer<T> observer, boolean weak) {
-        mExecutor.execute(new PostRunnable(observer, null, 0, weak, true));
+    protected synchronized void performObserve(Observer<T> observer) {
+        mExecutor.execute(new PostRunnable(observer, null, 0, true));
     }
 
-    protected void onPostPerformObserver(Observer<T> observer, boolean weak) {
-        dispatchObserver(observer, weak);
+    protected void onPostPerformObserver(Observer<T> observer) {
+        dispatchObserver(observer);
     }
 
     protected void onPostPerformDispatch(Observer<T> observer, Object value, int version) {
@@ -40,14 +40,12 @@ public class SerialObservable<T> extends Observable<T> {
         private final Object mPostValue;
         private final Observer<T> mObserver;
         private final int mVersion;
-        private final boolean mWeak;
         private final boolean mObserve;
 
-        public PostRunnable(Observer<T> observer, Object value, int version, boolean weak, boolean observe) {
+        public PostRunnable(Observer<T> observer, Object value, int version, boolean observe) {
             mObserver = observer;
             mPostValue = value;
             mVersion = version;
-            mWeak = weak;
             mObserve = observe;
         }
 
@@ -55,7 +53,7 @@ public class SerialObservable<T> extends Observable<T> {
         @Override
         public void run() {
             if (mObserve) {
-                onPostPerformObserver(mObserver, mWeak);
+                onPostPerformObserver(mObserver);
             } else {
                 onPostPerformDispatch(mObserver, mPostValue, mVersion);
             }

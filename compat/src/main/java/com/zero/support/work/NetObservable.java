@@ -51,9 +51,10 @@ public class NetObservable extends SerialObservable<Integer> {
         return NETWORK_NONE;
     }
 
+
     @Override
-    public synchronized void observe(Observer<Integer> observer, boolean weak) {
-        super.observe(observer, weak);
+    protected synchronized void performObserve(Observer<Integer> observer) {
+        super.performObserve(observer);
         if (!init) {
             onActive();
         }

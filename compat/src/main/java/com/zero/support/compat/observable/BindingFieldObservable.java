@@ -12,7 +12,7 @@ public class BindingFieldObservable<T> extends ObservableField<T> implements Obs
 
     public BindingFieldObservable(Observable<T> observable) {
         this.observable = observable;
-        observable.observe(this, true);
+        observable.observe(this);
     }
 
     @Override

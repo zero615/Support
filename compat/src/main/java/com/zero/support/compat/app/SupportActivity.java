@@ -2,10 +2,8 @@ package com.zero.support.compat.app;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -17,8 +15,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-
 import com.zero.support.compat.ActivityManager;
+import com.zero.support.compat.AppGlobal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,22 +26,19 @@ public class SupportActivity extends AppCompatActivity {
 
     private final Map<Class<?>, Dialog> dialogs = new HashMap<>();
     private final Map<Class<?>, SupportViewModel> viewModels = new HashMap<>();
-    private TipDialog dialog;
+
     private int containerId = android.R.id.content;
 
     public void bindFragmentContainer(int containerId) {
         this.containerId = containerId;
     }
 
-    private TipDialog obtainTipDialog() {
-        if (dialog == null) {
-            dialog = new TipDialog(this);
-        }
-        return dialog;
-    }
-
     public String getActivityName() {
         return getClass().getSimpleName();
+    }
+
+    public final RequestViewModel requestViewModel() {
+        return peekViewModel(RequestViewModel.class);
     }
 
     @Override
@@ -83,6 +78,15 @@ public class SupportActivity extends AppCompatActivity {
                 dispatchDialogEvent(model);
             }
 
+        });
+        viewModel.obtainTipEvent().observe(this, new Observer<DialogModel>() {
+            @Override
+            public void onChanged(DialogModel model) {
+                if (model == null) {
+                    return;
+                }
+                dispatchDialogEvent(model);
+            }
         });
     }
 
@@ -150,8 +154,7 @@ public class SupportActivity extends AppCompatActivity {
         if (viewModel == null) {
             viewModel = new ViewModelProvider(this).get(aClass);
             viewModels.put(viewModel.getClass(), viewModel);
-            viewModel.attachRequestViewModel(peekViewModel(RequestViewModel.class));
-            viewModel.attach(this);
+            viewModel.attachRequestViewModel(peekViewModel(RequestViewModel.class), this);
             attachSupportViewModel(viewModel);
         }
         return viewModel;
@@ -239,61 +242,43 @@ public class SupportActivity extends AppCompatActivity {
                 dispatchMessageEvent(s);
             }
         });
-        viewModel.obtainTipEvent().observe(this, new Observer<Tip>() {
-            @Override
-            public void onChanged(@Nullable Tip tip) {
-                if (tip == null) {
-                    return;
-                }
-                dispatchTipEvent(tip);
-            }
-        });
-
-
-    }
-
-    protected void dispatchTipEvent(Tip tip) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            obtainTipDialog().create();
-        }
-        obtainTipDialog().dispatchTipEvent(tip);
     }
 
 
     protected void dispatchMessageEvent(String message) {
-        Toast.makeText(this, message + "", Toast.LENGTH_SHORT).show();
+        AppGlobal.sendMessage(message);
     }
 
     @Override
     protected void onDestroy() {
         ActivityManager.destroyWindow(getWindow().getDecorView().getWindowToken());
         for (SupportViewModel viewModel : viewModels.values()) {
-            viewModel.detach();
+            viewModel.detachContext();
         }
         for (Dialog dialog : dialogs.values()) {
-            if (dialog instanceof CommonDialog) {
-                ((CommonDialog) dialog).setCurrentDialogModel(null);
-            } else {
-                dialog.dismiss();
-            }
+            dialog.dismiss();
         }
         super.onDestroy();
     }
 
     void requestRemoveDialog(DialogModel model) {
-        if (!model.isEnableCached()){
+        if (!model.isEnableCached()) {
             dialogs.remove(model.getClass());
         }
     }
+
+    void requestRemoveTips(Tip model) {
+        if (!model.isEnableCached()) {
+            dialogs.remove(model.getClass());
+        }
+    }
+
 
     protected void dispatchDialogEvent(DialogModel model) {
         Dialog dialog = dialogs.get(model.getClass());
 
         if (dialog == null) {
-            dialog = model.onCreateDialog(this);
-            if (dialog == null) {
-                dialog = onCreateSupportDialog(model);
-            }
+            dialog = onCreateSupportDialog(model);
             if (dialog == null) {
                 Log.e("support", "dispatchDialogEvent: fail for " + model);
                 return;
@@ -303,8 +288,7 @@ public class SupportActivity extends AppCompatActivity {
         model.show(dialog);
     }
 
-    protected CommonDialog onCreateSupportDialog(DialogModel model) {
-        return null;
+    protected Dialog onCreateSupportDialog(DialogModel model) {
+        return model.onCreateDialog(this);
     }
-
 }
