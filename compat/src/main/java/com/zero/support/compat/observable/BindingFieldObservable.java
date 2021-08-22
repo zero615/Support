@@ -3,8 +3,8 @@ package com.zero.support.compat.observable;
 
 import androidx.databinding.ObservableField;
 
-import com.zero.support.work.Observable;
-import com.zero.support.work.Observer;
+import com.zero.support.util.Observable;
+import com.zero.support.util.Observer;
 
 
 public class BindingFieldObservable<T> extends ObservableField<T> implements Observer<T> {

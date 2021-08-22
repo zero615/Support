@@ -1,7 +1,8 @@
 package com.zero.support.simple;
 
-import com.zero.support.compat.app.ResourceViewModel;
-import com.zero.support.compat.recycler.Cell;
+
+import com.zero.support.app.ResourceViewModel;
+import com.zero.support.recycler.Cell;
 import com.zero.support.compat.vo.Resource;
 
 import java.util.List;

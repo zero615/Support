@@ -18,9 +18,6 @@ package com.zero.support.compat.vo;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.MediatorLiveData;
-
 
 import com.zero.support.work.Response;
 
@@ -40,61 +37,44 @@ public class Resource<T> {
     @NonNull
     public final int status;
 
-    @Nullable
-    public final String message;
+    public final Response<T> response;
 
-    @Nullable
-    public T data;
+    public boolean initialize;
 
-    public int code;
 
-    public Resource(@NonNull int status, @Nullable T data, @Nullable String message) {
-        this.status = status;
-        this.data = data;
-        this.message = message;
+    public boolean isInitialize() {
+        return initialize;
     }
 
-    public Resource(@NonNull int status, @Nullable T data, int code, @Nullable String message) {
-        this.status = status;
-        this.data = data;
-        this.message = message;
-        this.code = code;
+    public Resource(Response<T> response, boolean initialize) {
+        this.status = response.isSuccessful() ? (isEmpty(response.data()) ? EMPTY : SUCCESS) : ERROR;
+        this.response = response;
+        this.initialize = initialize;
     }
 
-    public Resource(Resource resource) {
-        this.status = resource.status;
-        this.message = resource.message;
-        this.code = resource.code;
+    public Resource(Response<T> response) {
+        this(response, false);
     }
 
-    public static <T> Resource<T> success(@Nullable T data) {
-        return new Resource<>(SUCCESS, data, null);
+    public Resource(boolean initialize) {
+        this.status = LOADING;
+        this.response = null;
+        this.initialize = initialize;
     }
 
-    public static <T> Resource<T> empty(@Nullable T data) {
-        return new Resource<>(EMPTY, data, null);
+    public Resource() {
+        this(false);
     }
 
-    public static <T> Resource<T> error(String msg, @Nullable T data) {
-        return new Resource<>(ERROR, data, -1, msg);
+    public static <T> Resource<T> from(Response<T> response) {
+        return new Resource<>(response);
+    }
+    public static <T> Resource<T> from(Response<T> response,boolean initialize) {
+        return new Resource<>(response,initialize);
     }
 
-    public static <T> Resource<T> error(Response<T> response) {
-        return new Resource<>(ERROR, response.data(), response.code(), response.message());
-    }
-
-    public static <T> Resource<T> error(int code, String msg, @Nullable T data) {
-        return new Resource<>(ERROR, data, code, msg);
-    }
-
-    public static <T> Resource<T> loading(@Nullable T data) {
-        return new Resource<>(LOADING, data, null);
-    }
-
-    public static <T> MediatorLiveData<Resource<T>> errorLiveData(String msg, T data) {
-        MediatorLiveData<Resource<T>> liveData = new MediatorLiveData<>();
-        liveData.postValue(new Resource<>(ERROR, data, -1, msg));
-        return liveData;
+    public static <T> Resource<T> from(boolean initialize) {
+        return new Resource<>(initialize);
     }
 
     public boolean isLoading() {
@@ -110,18 +90,23 @@ public class Resource<T> {
         return status == ERROR;
     }
 
-    @Override
-    public String toString() {
-        return "Resource{" +
-                "status=" + status +
-                ", message='" + message + '\'' +
-                ", data=" + data +
-                ", code=" + code +
-                '}';
+    public boolean isEmpty() {
+        return status == EMPTY;
     }
 
+    public Resource(int status, Response<T> response, boolean initialize) {
+        this.status = status;
+        this.response = response;
+        this.initialize = initialize;
+    }
+
+
     @SuppressWarnings("ALL")
-    public boolean isEmpty() {
-        return isSuccess() && data == null || ((data instanceof Collection) && ((Collection) data).isEmpty());
+    private boolean isEmpty(T data) {
+        return data == null || ((data instanceof Collection) && ((Collection) data).isEmpty());
+    }
+
+    public T data() {
+        return response == null ? null : response.data();
     }
 }

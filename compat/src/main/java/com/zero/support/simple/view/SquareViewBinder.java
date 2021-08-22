@@ -5,9 +5,9 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
-import com.zero.support.compat.recycler.ColorCell;
-import com.zero.support.compat.recycler.ItemViewBinder;
-import com.zero.support.compat.recycler.ItemViewHolder;
+import com.zero.support.recycler.ColorCell;
+import com.zero.support.recycler.ItemViewBinder;
+import com.zero.support.recycler.ItemViewHolder;
 import com.zero.support.compat.widget.AspectRatioLayout;
 import com.zero.support.simple.vo.ImageCell;
 

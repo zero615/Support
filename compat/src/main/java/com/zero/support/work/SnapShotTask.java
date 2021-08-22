@@ -1,6 +1,8 @@
 package com.zero.support.work;
 
 
+import com.zero.support.util.Observable;
+
 public abstract class SnapShotTask<Param, Result> extends PromiseTask<Param, Result> {
     private final Observable<Snapshot> snapshotObservable = new Observable<>();
     private final Snapshot mSnapshot = new Snapshot();

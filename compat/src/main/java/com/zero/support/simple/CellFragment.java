@@ -13,11 +13,12 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.zero.support.app.SupportFragment;
 import com.zero.support.compat.R;
-import com.zero.support.compat.app.SupportFragment;
+
 import com.zero.support.compat.databinding.ActivityCellBinding;
-import com.zero.support.compat.recycler.Cell;
-import com.zero.support.compat.recycler.CellAdapter;
+import com.zero.support.recycler.Cell;
+import com.zero.support.recycler.CellAdapter;
 import com.zero.support.compat.vo.Resource;
 import com.zero.support.simple.widget.ResourceLayout;
 
@@ -43,7 +44,7 @@ public class CellFragment extends SupportFragment {
             public void onChanged(Resource<List<Cell>> listResource) {
                 binding.setResource(listResource);
                 if (listResource.isSuccess()) {
-                    adapter.submitList(listResource.data);
+                    adapter.submitList(listResource.data());
                 }
             }
         });

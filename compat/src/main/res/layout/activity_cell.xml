@@ -18,6 +18,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include layout="@layout/simple_view_empty" />
 
+        <include layout="@layout/simple_view_error" />
+
+        <include layout="@layout/simple_view_loading" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/viewContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </com.zero.support.simple.widget.ResourceLayout>
 </layout>

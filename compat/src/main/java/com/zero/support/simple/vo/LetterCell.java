@@ -3,9 +3,9 @@ package com.zero.support.simple.vo;
 
 import com.zero.support.compat.BR;
 import com.zero.support.compat.R;
-import com.zero.support.compat.recycler.SimpleViewBound;
-import com.zero.support.compat.recycler.annotation.RecyclerViewBind;
-import com.zero.support.compat.recycler.manager.StickyHeaders;
+import com.zero.support.recycler.SimpleViewBound;
+import com.zero.support.recycler.annotation.RecyclerViewBind;
+import com.zero.support.recycler.manager.StickyHeaders;
 import com.zero.support.compat.vo.BaseObject;
 
 @RecyclerViewBind(LetterCell.LetterViewBound.class)

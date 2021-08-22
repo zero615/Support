@@ -2,94 +2,93 @@ package com.zero.support.simple.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.databinding.BindingAdapter;
 
 import com.zero.support.compat.R;
 import com.zero.support.compat.vo.Resource;
 
 public class ResourceLayout extends FrameLayout {
-    private FrameLayout content;
-    private AppCompatImageView error;
-    private AppCompatImageView empty;
-    private ProgressBar progress;
 
+    private int currentStatus;
+    private SparseArray<View> mViews = new SparseArray<>();
 
     public ResourceLayout(@NonNull Context context) {
         this(context, null);
     }
 
     public ResourceLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-
-    public ResourceLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        ViewGroup view = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.resource_layout, this, true);
-
-        content = view.findViewById(R.id.resourceContent);
-        error = view.findViewById(R.id.resourceError);
-        empty = view.findViewById(R.id.resourceEmpty);
-        progress = view.findViewById(R.id.resourceProgress);
-        Log.e("xgf", "ResourceLayout: " + content + error + empty + progress+view.getChildCount());
-
+        super(context, attrs);
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        View view;
+        View content;
+        view = findViewById(R.id.viewContent);
+        content = view;
+        mViews.put(Resource.SUCCESS, view);
+        view = findViewById(R.id.viewEmpty);
+        if (view == null) {
+            view = content;
+        }
+        mViews.put(Resource.EMPTY, view);
+        view = findViewById(R.id.viewError);
+        if (view == null) {
+            view = content;
+        }
+        mViews.put(Resource.ERROR, view);
+        view = findViewById(R.id.viewLoading);
+        if (view == null) {
+            view = content;
+        }
+        mViews.put(Resource.LOADING, view);
+        setCurrentStatus(Resource.EMPTY);
+    }
 
+    public void setCurrentStatus(int status) {
+        View view = mViews.get(status);
+        if (view == null) {
+            return;
+        }
+        currentStatus = status;
+        for (int i = 0; i < mViews.size(); i++) {
+            view = mViews.valueAt(i);
+            if (view == null) {
+                continue;
+            }
+            if (mViews.keyAt(i) != status) {
+                view.setVisibility(GONE);
+            }
+        }
+        view = mViews.get(currentStatus);
+        if (view != null) {
+            view.setVisibility(VISIBLE);
+        }
 
+    }
+
+    public int getCurrentStatus() {
+        return currentStatus;
     }
 
     public void setResource(Resource<?> resource) {
         if (resource == null) {
             return;
         }
-        if (resource.isSuccess()) {
-            if (resource.isEmpty()) {
-                empty.setVisibility(VISIBLE);
-                content.setVisibility(GONE);
-            } else {
-                empty.setVisibility(GONE);
-                content.setVisibility(VISIBLE);
-            }
+        if (resource.isInitialize()) {
+            setCurrentStatus(resource.status);
         }
-        if (resource.isError()) {
-            error.setVisibility(VISIBLE);
-        } else {
-            error.setVisibility(GONE);
-        }
-
-        if (resource.isLoading()) {
-            progress.setVisibility(VISIBLE);
-        } else {
-            progress.setVisibility(GONE);
-        }
-
     }
 
     @BindingAdapter("resource")
     public static void setResource(ResourceLayout layout, Resource<?> resource) {
         layout.setResource(resource);
-    }
-
-    @Override
-    public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        if (content != null) {
-            content.addView(child, index, params);
-        }else {
-            super.addView(child,index,params);
-        }
     }
 }

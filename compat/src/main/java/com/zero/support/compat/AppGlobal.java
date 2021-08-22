@@ -1,5 +1,6 @@
 package com.zero.support.compat;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 
+import com.zero.support.app.ActivityInjector;
 import com.zero.support.compat.observable.SingleLiveEvent;
 import com.zero.support.compat.util.Preferences;
 import com.zero.support.compat.util.SharedPreferenceObservable;
@@ -58,6 +60,7 @@ public class AppGlobal {
 
     public static void initialize(Application app) {
         AppGlobal.app = app;
+        ActivityInjector.inject();
         app.registerActivityLifecycleCallbacks(ActivityManager.callbacks);
         AppGlobal.preferenceDir = new File(app.getFilesDir(), "preferences");
     }

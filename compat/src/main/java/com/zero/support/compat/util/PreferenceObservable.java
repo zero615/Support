@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 
 
 import com.zero.support.work.AppExecutor;
-import com.zero.support.work.Observable;
+import com.zero.support.util.Observable;
 
 import java.util.Set;
 

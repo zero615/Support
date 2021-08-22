@@ -2,12 +2,13 @@ package com.zero.support.simple.vo;
 
 import android.view.View;
 
+import com.zero.support.app.SupportViewModel;
 import com.zero.support.compat.R;
-import com.zero.support.compat.app.SupportViewModel;
-import com.zero.support.compat.recycler.CellAdapter;
-import com.zero.support.compat.recycler.ItemViewHolder;
-import com.zero.support.compat.recycler.SimpleViewBound;
-import com.zero.support.compat.recycler.annotation.RecyclerViewBind;
+
+import com.zero.support.recycler.CellAdapter;
+import com.zero.support.recycler.ItemViewHolder;
+import com.zero.support.recycler.SimpleViewBound;
+import com.zero.support.recycler.annotation.RecyclerViewBind;
 import com.zero.support.compat.vo.BaseObject;
 
 @RecyclerViewBind(ImportCell.ImportViewBinder.class)

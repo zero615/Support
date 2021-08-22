@@ -12,19 +12,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
+import com.zero.support.app.SupportActivity;
 import com.zero.support.compat.R;
-import com.zero.support.compat.app.SupportActivity;
 
 
 public class TitleActivity extends SupportActivity {
     private TextView textView;
     private FrameLayout container;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_title);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,6 +35,10 @@ public class TitleActivity extends SupportActivity {
 
         textView = findViewById(R.id.title);
         container = findViewById(R.id.content);
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
     }
 
     @Override

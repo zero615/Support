@@ -3,6 +3,9 @@ package com.zero.support.work;
 import android.os.Binder;
 import android.os.ConditionVariable;
 
+import com.zero.support.util.Observable;
+import com.zero.support.util.Observer;
+
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CopyOnWriteArrayList;

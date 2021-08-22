@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="view_page_content" type="id" />
-    <item name="view_page_empty" type="id" />
-    <item name="view_page_loading" type="id" />
-    <item name="view_page_error" type="id" />
+    <item name="viewContent" type="id" />
+    <item name="viewEmpty" type="id" />
+    <item name="viewLoading" type="id" />
+    <item name="viewError" type="id" />
 </resources>

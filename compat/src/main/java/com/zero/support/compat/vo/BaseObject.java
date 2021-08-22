@@ -5,8 +5,8 @@ import android.view.View;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.ObservableBoolean;
 
-import com.zero.support.compat.recycler.Cell;
-import com.zero.support.compat.recycler.ItemViewHolder;
+import com.zero.support.recycler.Cell;
+import com.zero.support.recycler.ItemViewHolder;
 
 
 /**

@@ -8,21 +8,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zero.support.compat.R;
 import com.zero.support.compat.databinding.ActivityPackagesBinding;
-import com.zero.support.compat.recycler.CellAdapter;
+import com.zero.support.recycler.CellAdapter;
 import com.zero.support.simple.CellActivity;
 
 
 public class PackagesActivity extends CellActivity {
 
     ActivityPackagesBinding binding;
-
-    @Override
-    protected void onCreateContentView(LayoutInflater from, FrameLayout content) {
-        binding = DataBindingUtil.inflate(from, R.layout.activity_packages, content, false);
-        content.addView(binding.getRoot());
-        setUpRecyclerView(binding.recyclerView);
-        binding.slideBar.setOnTouchLetterChangeListener((isTouch, letter) -> getViewModel().indexOf(getAdapter().getItems().pickCells(), letter));
-    }
+//
+//    @Override
+//    protected void onCreateContentView(LayoutInflater from, FrameLayout content) {
+//        binding = DataBindingUtil.inflate(from, R.layout.activity_packages, content, false);
+//        content.addView(binding.getRoot());
+//        setUpRecyclerView(binding.recyclerView);
+//        binding.slideBar.setOnTouchLetterChangeListener((isTouch, letter) -> getViewModel().indexOf(getAdapter().getItems().pickCells(), letter));
+//    }
 
     @Override
     public PackagesViewModel getViewModel() {
@@ -35,7 +35,7 @@ public class PackagesActivity extends CellActivity {
     }
 
     @Override
-    protected PackagesViewModel onCreateViewModel() {
+    protected PackagesViewModel onCreateCellViewModel() {
         return attachSupportViewModel(PackagesViewModel.class);
     }
 

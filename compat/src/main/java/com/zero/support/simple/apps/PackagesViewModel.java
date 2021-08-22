@@ -5,7 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.zero.support.compat.AppGlobal;
-import com.zero.support.compat.recycler.Cell;
+import com.zero.support.recycler.Cell;
 import com.zero.support.compat.widget.SlideBar;
 import com.zero.support.simple.CellViewModel;
 import com.zero.support.simple.vo.AppPackageCell;
