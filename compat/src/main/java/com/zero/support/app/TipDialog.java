@@ -17,7 +17,7 @@ public class TipDialog extends Dialog {
 
 
     private TextView textView;
-    private SparseArray<View> views = new SparseArray<>();
+    private final SparseArray<View> views = new SparseArray<>();
     /**
      * 显示 Loading 图标
      */

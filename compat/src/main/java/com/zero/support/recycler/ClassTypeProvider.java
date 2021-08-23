@@ -3,7 +3,6 @@ package com.zero.support.recycler;
 import android.util.Log;
 import android.util.SparseArray;
 
-
 import com.zero.support.recycler.annotation.RecyclerViewBind;
 
 import java.util.ArrayList;
@@ -14,7 +13,17 @@ public class ClassTypeProvider {
     private SparseArray<ItemViewBinder> mCaches = new SparseArray<>();
 
     public int getItemViewType(int position, Object item) {
-        int type = types.indexOf(item.getClass());
+
+        Class<?> cls = item.getClass();
+        int type = -1;
+        while (cls != null) {
+            type = types.indexOf(cls);
+            if (type != -1) {
+                break;
+            }
+            cls = cls.getSuperclass();
+        }
+
         if (type == -1) {
             RecyclerViewBind viewBind = item.getClass().getAnnotation(RecyclerViewBind.class);
             if (viewBind != null) {

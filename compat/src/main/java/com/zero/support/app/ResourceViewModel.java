@@ -1,14 +1,33 @@
 package com.zero.support.app;
 
 
+import androidx.databinding.ObservableBoolean;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.zero.support.compat.util.ResourceRequest;
 import com.zero.support.compat.vo.Resource;
-import com.zero.support.util.Observable;
-import com.zero.support.work.Response;
+import com.zero.support.core.observable.Observable;
+import com.zero.support.core.task.Response;
 
-public abstract class ResourceViewModel<Param, Result> extends SupportViewModel {
-    private boolean initialize = true;
+public abstract class ResourceViewModel<Param, Result> extends SupportViewModel implements SwipeRefreshLayout.OnRefreshListener {
+
+    private final ObservableBoolean refreshing = new ObservableBoolean();
+
+    public ObservableBoolean getRefreshing() {
+        return refreshing;
+    }
+
+    @Override
+    protected void onAttachActivity(SupportActivity activity) {
+        super.onAttachActivity(activity);
+
+    }
+
+    @Override
+    protected void onAttachFragment(SupportFragment fragment) {
+        super.onAttachFragment(fragment);
+    }
+
     private final ResourceRequest<Param, Result> request = new ResourceRequest<Param, Result>() {
         @Override
         protected Result performExecute(Param param) throws Throwable {
@@ -22,15 +41,17 @@ public abstract class ResourceViewModel<Param, Result> extends SupportViewModel 
 
         @Override
         protected void onResourceChanged(Resource<Result> resource) {
-            if (initialize && resource.isSuccess() && !resource.isEmpty()) {
-                initialize = false;
-            }
+            refreshing.set(resource.isLoading());
             ResourceViewModel.this.onResourceChanged(resource);
         }
     };
 
+    public boolean isRequested() {
+        return request.isRequested();
+    }
+
     public final boolean isInitialize() {
-        return initialize;
+        return request.isInitialize();
     }
 
     protected void onReceiveResponse(Response<Result> response) {
@@ -50,4 +71,8 @@ public abstract class ResourceViewModel<Param, Result> extends SupportViewModel 
 
     protected abstract Result performExecute(Param param) throws Throwable;
 
+    @Override
+    public void onRefresh() {
+        notifyDataSetChanged(null);
+    }
 }

@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer;
 
 import com.zero.support.compat.AppGlobal;
 import com.zero.support.compat.observable.SingleLiveEvent;
-import com.zero.support.util.Observable;
+import com.zero.support.core.observable.Observable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -18,7 +18,9 @@ public class MainActivity extends CellActivity {
         super.onCreate(savedInstanceState);
         getAdapter().setEnableClick(true);
         getToolbar().setNavigationIcon(null);
-        getViewModel().notifyDataSetChanged(null);
+        if (!getViewModel().isRequested()){
+            getViewModel().notifyDataSetChanged(null);
+        }
     }
 
     @Override

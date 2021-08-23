@@ -3,9 +3,7 @@ package com.zero.support.app;
 import android.app.Activity;
 import android.app.Dialog;
 
-import com.zero.support.work.AppExecutor;
-
-import java.lang.reflect.Type;
+import com.zero.support.core.AppExecutor;
 
 
 public final class Tip extends DialogModel implements Runnable {

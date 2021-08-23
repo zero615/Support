@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
 import com.zero.support.compat.observable.SingleLiveEvent;
-import com.zero.support.util.PromiseObservable;
+import com.zero.support.core.observable.PromiseObservable;
 
 
 import java.util.HashMap;

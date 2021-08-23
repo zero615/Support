@@ -9,6 +9,10 @@
         <variable
             name="resource"
             type="com.zero.support.compat.vo.Resource" />
+
+        <variable
+            name="viewModel"
+            type="com.zero.support.app.ResourceViewModel" />
     </data>
 
 
@@ -26,12 +30,15 @@
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/viewContent"
+            onRefreshListener="@{viewModel}"
+            refreshing="@{viewModel.refreshing}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </com.zero.support.simple.widget.ResourceLayout>
 </layout>

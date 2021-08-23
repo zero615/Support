@@ -26,6 +26,7 @@ public abstract class CellActivity extends TitleActivity {
         ActivityCellBinding binding = setBindingContentView(R.layout.activity_cell);
         recyclerView = binding.recyclerView;
         viewModel = onCreateCellViewModel();
+        binding.setViewModel(viewModel);
         adapter = new CellAdapter(viewModel);
         onBindRecyclerView(binding.recyclerView);
         onBindCellAdapter(adapter);

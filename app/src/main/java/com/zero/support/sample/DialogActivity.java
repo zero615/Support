@@ -1,7 +1,9 @@
 package com.zero.support.sample;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -11,12 +13,14 @@ import com.zero.support.app.SimpleDialogModel;
 import com.zero.support.app.SimplePermissionModel;
 import com.zero.support.app.Tip;
 import com.zero.support.compat.AppGlobal;
-import com.zero.support.util.Observable;
-import com.zero.support.util.Observer;
+import com.zero.support.core.observable.ConnectivityObservable;
+import com.zero.support.core.observable.Observable;
+import com.zero.support.core.observable.Observer;
 
 public class DialogActivity extends ButtonActivity {
     private Observable<String> observable = new Observable<>();
     private Button button;
+    private ConnectivityObservable connectivityObservable = new ConnectivityObservable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,12 @@ public class DialogActivity extends ButtonActivity {
                         injectViewModel().dismiss();
                     }
                 }, 10 * 1000);
+            }
+        });
+        connectivityObservable.observe(new Observer<Intent>() {
+            @Override
+            public void onChanged(Intent intent) {
+                Log.e("xgf", "onChanged: " + intent);
             }
         });
 

@@ -1,6 +1,5 @@
 package com.zero.support.compat;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,8 +11,8 @@ import com.zero.support.app.ActivityInjector;
 import com.zero.support.compat.observable.SingleLiveEvent;
 import com.zero.support.compat.util.Preferences;
 import com.zero.support.compat.util.SharedPreferenceObservable;
-import com.zero.support.work.AppExecutor;
-import com.zero.support.work.ObjectManager;
+import com.zero.support.core.AppExecutor;
+import com.zero.support.core.task.ObjectManager;
 
 import java.io.File;
 

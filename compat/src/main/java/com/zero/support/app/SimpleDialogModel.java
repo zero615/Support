@@ -2,23 +2,27 @@ package com.zero.support.app;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import androidx.appcompat.app.AlertDialog;
 
 
 public class SimpleDialogModel extends DialogModel {
-    public static final String GROUP_DIALOG = "dialogs";
-
     private final Builder builder;
+    public static final int TYPE_HTML = 2;
+    public static final int TYPE_HTML_URL = 3;
+    public static final int TYPE_PLAIN_TEXT = 1;
 
+    public static final int TYPE_RICH_TEXT = 0;
 
     @Override
     public boolean isEnableCached() {
@@ -34,9 +38,7 @@ public class SimpleDialogModel extends DialogModel {
     @Override
     public void onClick(View view, int which) {
         super.onClick(view, which);
-        if (SimpleDialogModel.this.builder.autoDismiss){
-            dismiss();
-        }
+        dismiss();
     }
 
     public String getNegative() {
@@ -60,7 +62,7 @@ public class SimpleDialogModel extends DialogModel {
         return builder.title;
     }
 
-    public Spanned getContent() {
+    public CharSequence getContent() {
         String content = builder.content;
         if (builder.contentId != 0) {
             content = requireViewModel().requireActivity().getString(builder.contentId);
@@ -71,30 +73,31 @@ public class SimpleDialogModel extends DialogModel {
         } else {
             text = content;
         }
+        if (builder.textType != TYPE_RICH_TEXT) {
+            return text;
+        }
         try {
-            if (builder.html) {
-                SpannableStringBuilder spanned = (SpannableStringBuilder) Html.fromHtml(text);
-                URLSpan[] urlSpans = spanned.getSpans(0, spanned.length(), URLSpan.class);
-                for (final URLSpan span : urlSpans) {
-                    int start = spanned.getSpanStart(span);
-                    int end = spanned.getSpanEnd(span);
-                    int flag = spanned.getSpanFlags(span);
-                    ClickableSpan clickableSpan = new URLSpan(span.getURL()) {
-                        @Override
-                        public void onClick(View widget) {
-                            String url = span.getURL();
-                            if (builder.interceptor != null) {
-                                url = builder.interceptor.intercept(url);
-                            }
-                            SimpleDialogModel.this.onClickSpan(widget, url);
+            SpannableStringBuilder spanned = (SpannableStringBuilder) Html.fromHtml(text);
+            URLSpan[] urlSpans = spanned.getSpans(0, spanned.length(), URLSpan.class);
+            for (final URLSpan span : urlSpans) {
+                int start = spanned.getSpanStart(span);
+                int end = spanned.getSpanEnd(span);
+                int flag = spanned.getSpanFlags(span);
+                ClickableSpan clickableSpan = new URLSpan(span.getURL()) {
+                    @Override
+                    public void onClick(View widget) {
+                        String url = span.getURL();
+                        if (builder.interceptor != null) {
+                            url = builder.interceptor.intercept(url);
                         }
-                    };
-                    spanned.removeSpan(span);
-                    spanned.setSpan(clickableSpan, start, end, flag);
+                        SimpleDialogModel.this.onClickSpan(widget, url);
+                    }
+                };
+                spanned.removeSpan(span);
+                spanned.setSpan(clickableSpan, start, end, flag);
 
-                }
-                return spanned;
             }
+            return spanned;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -112,13 +115,38 @@ public class SimpleDialogModel extends DialogModel {
         if (value != null) {
             builder.setTitle(value);
         }
-
+        boolean handled = false;
         if (this.builder.contentViewId != 0) {
             builder.setView(this.builder.contentViewId);
-        } else {
-            Spanned spanned = getContent();
-            if (spanned != null) {
-                builder.setMessage(spanned);
+            handled = true;
+        } else if (this.builder.contentView != null) {
+            builder.setView(this.builder.contentView);
+            handled = true;
+        } else if (this.builder.viewBinder != null) {
+            View view = this.builder.viewBinder.onCreateView(activity, null);
+            if (view != null) {
+                this.builder.viewBinder.onBindView(view, this);
+                handled = true;
+                builder.setView(view);
+            }
+        }
+        if (!handled) {
+            if (this.builder.textType == TYPE_HTML) {
+                WebView webView = this.builder.webView;
+                if (webView == null) {
+                    webView = new WebView(activity);
+                    this.builder.webView = webView;
+                }
+                webView.loadData(String.valueOf(getContent()), "text/html", "UTF-8");
+            } else if (this.builder.textType == TYPE_HTML_URL) {
+                WebView webView = this.builder.webView;
+                if (webView == null) {
+                    webView = new WebView(activity);
+                    this.builder.webView = webView;
+                }
+                webView.loadUrl(String.valueOf(getContent()));
+            } else {
+                builder.setMessage(getContent());
             }
         }
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -146,6 +174,16 @@ public class SimpleDialogModel extends DialogModel {
         return builder.create();
     }
 
+    public interface ClickInterceptor {
+        String intercept(String url);
+    }
+
+    public interface ViewBinder {
+        View onCreateView(Context context, ViewGroup parent);
+
+        void onBindView(View view, SimpleDialogModel model);
+    }
+
     public static class Builder {
         private String negative;
         private int negativeId;
@@ -159,9 +197,12 @@ public class SimpleDialogModel extends DialogModel {
         private String name;
         private ClickInterceptor interceptor;
         private int contentViewId;
-        private boolean html;
+        private int textType;
         private boolean cancelable = true;
-        private boolean autoDismiss = true;
+        private WebView webView;
+        private View contentView;
+
+        private ViewBinder viewBinder;
 
         public Builder name(String name) {
             this.name = name;
@@ -170,11 +211,6 @@ public class SimpleDialogModel extends DialogModel {
 
         public Builder clickInterceptor(ClickInterceptor interceptor) {
             this.interceptor = interceptor;
-            return this;
-        }
-
-        public Builder autoDismiss(boolean auto) {
-            autoDismiss = auto;
             return this;
         }
 
@@ -225,6 +261,11 @@ public class SimpleDialogModel extends DialogModel {
             return this;
         }
 
+        public Builder viewBinder(ViewBinder viewBinder) {
+            this.viewBinder = viewBinder;
+            return this;
+        }
+
 
         public Builder title(String title) {
             this.title = title;
@@ -234,6 +275,16 @@ public class SimpleDialogModel extends DialogModel {
 
         public Builder title(int title) {
             this.titleId = title;
+            return this;
+        }
+
+        public Builder webView(WebView webView) {
+            this.webView = webView;
+            return this;
+        }
+
+        public Builder contentView(View view) {
+            this.contentView = view;
             return this;
         }
 
@@ -250,10 +301,11 @@ public class SimpleDialogModel extends DialogModel {
             }
         }
 
-        public Builder html(boolean b) {
-            this.html = b;
+        public Builder textType(int type) {
+            this.textType = type;
             return this;
         }
+
 
         public Builder cancelable(boolean cancel) {
             this.cancelable = cancel;

@@ -84,6 +84,8 @@ public class ResourceLayout extends FrameLayout {
         }
         if (resource.isInitialize()) {
             setCurrentStatus(resource.status);
+        } else if (currentStatus != Resource.SUCCESS) {
+            setCurrentStatus(resource.status);
         }
     }
 

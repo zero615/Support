@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-
 import com.zero.support.recycler.Cell;
 
 import java.util.ArrayList;
@@ -25,8 +24,7 @@ public class CellList {
     private Cell maxLastCell;
     private int minCount;
     private Cell minLastCell;
-
-    private List<ListCallback> mCallbacks = new CopyOnWriteArrayList<>();
+    private final List<ListCallback> mCallbacks = new CopyOnWriteArrayList<>();
 
     public CellList() {
 

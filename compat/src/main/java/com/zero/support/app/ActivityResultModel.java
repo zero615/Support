@@ -3,7 +3,7 @@ package com.zero.support.app;
 
 import android.content.Intent;
 
-import com.zero.support.util.Observable;
+import com.zero.support.core.observable.Observable;
 
 
 public class ActivityResultModel extends ActivityModel {

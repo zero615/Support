@@ -6,8 +6,6 @@ import android.app.Application;
 import com.zero.support.compat.AppGlobal;
 
 
-
-
 public class ContextViewModel extends ObservableViewModel {
     private final Application application;
     @SuppressLint("StaticFieldLeak")

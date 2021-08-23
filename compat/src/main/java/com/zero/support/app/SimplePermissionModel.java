@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.provider.Settings;
 
 
-import com.zero.support.util.Observer;
+import com.zero.support.core.observable.Observer;
 
 public class SimplePermissionModel extends PermissionModel {
 

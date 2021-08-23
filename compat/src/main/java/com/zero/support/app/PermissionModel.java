@@ -1,7 +1,7 @@
 package com.zero.support.app;
 
 
-import com.zero.support.util.Observable;
+import com.zero.support.core.observable.Observable;
 
 
 public class PermissionModel extends ActivityModel {

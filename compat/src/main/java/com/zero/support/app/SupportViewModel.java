@@ -4,7 +4,7 @@ import android.os.Looper;
 
 import androidx.annotation.StringRes;
 
-import com.zero.support.work.AppExecutor;
+import com.zero.support.core.AppExecutor;
 
 
 public abstract class SupportViewModel extends ContextViewModel {

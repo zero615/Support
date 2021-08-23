@@ -3,8 +3,8 @@ package com.zero.support.compat.observable;
 
 import androidx.databinding.ObservableBoolean;
 
-import com.zero.support.util.Observable;
-import com.zero.support.util.Observer;
+import com.zero.support.core.observable.Observable;
+import com.zero.support.core.observable.Observer;
 
 
 public class BindingBooleanObservable extends ObservableBoolean implements Observer<Boolean> {

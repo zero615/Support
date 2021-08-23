@@ -7,7 +7,7 @@ import com.zero.support.recycler.ItemViewBound;
 import com.zero.support.recycler.ItemViewHolder;
 
 
-public abstract class ListCellViewBinder<T extends ListCell> extends ItemViewBound {
+public abstract class ListCellViewBinder<T extends GroupCell> extends ItemViewBound {
 
     public ListCellViewBinder(int layoutId) {
         super(layoutId);
@@ -17,7 +17,7 @@ public abstract class ListCellViewBinder<T extends ListCell> extends ItemViewBou
     @Override
     public void bindItem(ItemViewHolder holder) {
         super.bindItem(holder);
-        ListCell cell = holder.getItem();
+        GroupCell cell = holder.getItem();
         RecyclerView recyclerView = onBindRecyclerView(holder);
         CellAdapter adapter = (CellAdapter) recyclerView.getAdapter();
         if (adapter == null) {

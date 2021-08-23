@@ -19,7 +19,7 @@ package com.zero.support.compat.vo;
 
 import androidx.annotation.NonNull;
 
-import com.zero.support.work.Response;
+import com.zero.support.core.task.Response;
 
 import java.util.Collection;
 
@@ -100,6 +100,14 @@ public class Resource<T> {
         this.initialize = initialize;
     }
 
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "status=" + status +
+                ", response=" + response +
+                ", initialize=" + initialize +
+                '}';
+    }
 
     @SuppressWarnings("ALL")
     private boolean isEmpty(T data) {

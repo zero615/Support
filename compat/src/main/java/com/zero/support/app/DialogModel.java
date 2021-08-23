@@ -5,7 +5,7 @@ import android.app.Dialog;
 import android.util.Log;
 import android.view.View;
 
-import com.zero.support.util.Observable;
+import com.zero.support.core.observable.Observable;
 
 
 public abstract class DialogModel extends ActivityModel {

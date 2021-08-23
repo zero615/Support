@@ -2,19 +2,16 @@ package com.zero.support.binding;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
+import androidx.databinding.InverseBindingAdapter;
+import androidx.databinding.InverseBindingListener;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.zero.support.compat.BR;
-import com.zero.support.compat.vo.Resource;
 import com.zero.support.glide.GlideModel;
 
 public class BindUtil {
@@ -61,4 +58,45 @@ public class BindUtil {
     }
 
 
+    @BindingAdapter(value = {"onRefreshListener", "refreshingAttrChanged"}, requireAll = false)
+    public static void setOnRefreshListener(final SwipeRefreshLayout view,
+                                            final SwipeRefreshLayout.OnRefreshListener listener,
+                                            final InverseBindingListener refreshingAttrChanged) {
+        Log.d("bind", "setRefreshingListener" + listener + refreshingAttrChanged + view.isRefreshing());
+        SwipeRefreshLayout.OnRefreshListener newValue = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.e("bind", "onRefresh: run ");
+                if (refreshingAttrChanged != null) {
+                    refreshingAttrChanged.onChange();
+                }
+                if (listener != null) {
+                    listener.onRefresh();
+                }
+            }
+        };
+        if (view.isRefreshing()) {
+            if (refreshingAttrChanged != null) {
+                refreshingAttrChanged.onChange();
+            }
+//            if (listener != null) {
+//                listener.onRefresh();
+//            }
+        }
+        view.setOnRefreshListener(newValue);
+
+    }
+
+    @BindingAdapter("refreshing")
+    public static void setRefreshing(SwipeRefreshLayout view, boolean refreshing) {
+        Log.d("bind", "setRefreshing" + refreshing);
+        if (refreshing != view.isRefreshing()) {
+            view.setRefreshing(refreshing);
+        }
+    }
+
+    @InverseBindingAdapter(attribute = "refreshing", event = "refreshingAttrChanged")
+    public static boolean isRefreshing(SwipeRefreshLayout view) {
+        return view.isRefreshing();
+    }
 }
