@@ -11,7 +11,7 @@ import java.io.RandomAccessFile;
 
 public class SeekOutputStream extends OutputStream {
     boolean useDefault;
-    private RandomAccessFile randomAccessFile;
+    private final RandomAccessFile randomAccessFile;
 
 
     public SeekOutputStream(String path, long offset) throws IOException {

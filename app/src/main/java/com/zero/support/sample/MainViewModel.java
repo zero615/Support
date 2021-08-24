@@ -3,13 +3,15 @@ package com.zero.support.sample;
 
 import android.view.View;
 
+import com.zero.easy.CellViewModel;
 import com.zero.support.core.AppGlobal;
-import com.zero.support.core.app.ActivityInjector;
+
 import com.zero.support.app.SupportActivity;
 import com.zero.support.recycler.Cell;
 import com.zero.support.recycler.ItemViewHolder;
-import com.zero.support.simple.CellViewModel;
-import com.zero.support.simple.vo.LetterCell;
+
+import com.zero.easy.vo.LetterCell;
+
 
 import java.util.ArrayList;
 import java.util.List;

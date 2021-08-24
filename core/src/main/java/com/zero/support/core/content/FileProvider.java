@@ -116,10 +116,9 @@ public final class FileProvider extends ContentProvider {
         return result;
     }
 
-    public static Application app;
 
     public static void install(Application app, Runnable action) {
-        FileProvider.app = app;
+        AppGlobal.inject(app);
         authority = app.getPackageName() + ":zero.support.file.provider";
         if (action != null) {
             action.run();
@@ -143,12 +142,8 @@ public final class FileProvider extends ContentProvider {
         return authority;
     }
 
-    public static Application currentApplication() {
-        return app == null ? null : AppGlobal.currentApplication();
-    }
-
     public static Uri getUriForFile(File file) {
-        return getUriForFile(currentApplication(), authority, file);
+        return getUriForFile(AppGlobal.currentApplication(), authority, file);
     }
 
     @Override

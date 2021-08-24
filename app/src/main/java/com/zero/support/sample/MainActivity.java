@@ -5,10 +5,11 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.zero.easy.CellActivity;
+import com.zero.easy.CellViewModel;
 import com.zero.support.recycler.CellAdapter;
 import com.zero.support.recycler.SimpleViewBound;
-import com.zero.support.simple.CellActivity;
-import com.zero.support.simple.CellViewModel;
+
 
 
 public class MainActivity extends CellActivity {

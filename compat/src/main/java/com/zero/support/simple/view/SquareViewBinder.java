@@ -1,4 +1,4 @@
-package com.zero.support.simple.view;
+package com.zero.easy.view;
 
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -9,7 +9,7 @@ import com.zero.support.recycler.ColorCell;
 import com.zero.support.recycler.ItemViewBinder;
 import com.zero.support.recycler.ItemViewHolder;
 import com.zero.support.compat.widget.AspectRatioLayout;
-import com.zero.support.simple.vo.ImageCell;
+import com.zero.easy.vo.ImageCell;
 
 import java.util.List;
 

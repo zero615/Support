@@ -1,4 +1,4 @@
-package com.zero.support.recycler;
+package com.zero.easy.view;
 
 import android.graphics.Color;
 

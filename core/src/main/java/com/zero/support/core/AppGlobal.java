@@ -46,9 +46,11 @@ public class AppGlobal {
     });
 
     public static void inject(Application app) {
-        AppGlobal.app = app;
-        ActivityInjector.inject();
-        AppGlobal.preferenceDir = new File(app.getFilesDir(), "preferences");
+        if (AppGlobal.app != app) {
+            AppGlobal.app = app;
+            ActivityInjector.inject();
+            AppGlobal.preferenceDir = new File(app.getFilesDir(), "preferences");
+        }
     }
 
 

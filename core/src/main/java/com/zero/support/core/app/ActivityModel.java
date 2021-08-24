@@ -12,6 +12,13 @@ public class ActivityModel {
     }
 
     public final InjectViewModel requireViewModel() {
+        if (injectViewModel == null) {
+            throw new RuntimeException("model is detach");
+        }
+        return injectViewModel;
+    }
+
+    public InjectViewModel getViewModel() {
         return injectViewModel;
     }
 

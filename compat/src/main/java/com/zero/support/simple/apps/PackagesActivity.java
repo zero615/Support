@@ -1,4 +1,4 @@
-package com.zero.support.simple.apps;
+package com.zero.easy.apps;
 
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;

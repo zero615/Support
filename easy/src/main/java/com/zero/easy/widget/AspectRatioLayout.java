@@ -1,11 +1,11 @@
-package com.zero.support.widget;
+package com.zero.easy.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.zero.support.R;
+import com.zero.easy.R;
 
 
 /**

@@ -7,7 +7,7 @@ import java.io.RandomAccessFile;
 
 public class SeekInputStream extends InputStream {
     boolean useDefault;
-    private RandomAccessFile randomAccessFile;
+    private final RandomAccessFile randomAccessFile;
 
     public SeekInputStream(String path, long offset) throws IOException {
         this(new File(path), offset);

@@ -4,8 +4,8 @@ import android.content.DialogInterface;
 
 
 public class DialogClickEvent {
-    private DialogModel model;
-    private int which;
+    private final DialogModel model;
+    private final int which;
 
     public DialogClickEvent(DialogModel model, int which) {
         this.which = which;

@@ -1,4 +1,4 @@
-package com.zero.support.widget;
+package com.zero.easy.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.BindingAdapter;
 
 
-import com.zero.support.R;
+import com.zero.easy.R;
 import com.zero.support.vo.Resource;
 
 public class ResourceLayout extends FrameLayout {

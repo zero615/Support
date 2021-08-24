@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 public class BoundInputStream extends FilterInputStream {
     private long read;
-    private long limit;
+    private final long limit;
     private boolean dummy;
 
     public BoundInputStream(InputStream in, long limit) {

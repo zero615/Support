@@ -1,4 +1,4 @@
-package com.zero.support.widget;
+package com.zero.easy.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,7 +13,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.zero.support.R;
+import com.zero.easy.R;
 
 
 public class SlideBar extends View {

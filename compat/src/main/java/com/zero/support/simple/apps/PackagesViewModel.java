@@ -1,4 +1,4 @@
-package com.zero.support.simple.apps;
+package com.zero.easy.apps;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -8,8 +8,8 @@ import com.zero.support.core.AppGlobal;
 import com.zero.support.recycler.Cell;
 import com.zero.support.compat.widget.SlideBar;
 import com.zero.support.simple.CellViewModel;
-import com.zero.support.simple.vo.AppPackageCell;
-import com.zero.support.simple.vo.LetterCell;
+import com.zero.easy.vo.AppPackageCell;
+import com.zero.easy.vo.LetterCell;
 
 import java.util.ArrayList;
 import java.util.HashMap;

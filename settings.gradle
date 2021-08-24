@@ -2,3 +2,5 @@ rootProject.name = "Support"
 include ':app'
 include ':core'
 include ':ui'
+
+include ':easy'

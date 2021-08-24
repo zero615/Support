@@ -70,14 +70,14 @@ public abstract class DialogModel extends ActivityModel {
     }
 
     public void dismiss() {
-        InjectViewModel viewModel = requireViewModel();
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
+        InjectViewModel viewModel = getViewModel();
         if (viewModel != null) {
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
             viewModel.removeDialog(this);
+            dialog = null;
         }
-        dialog = null;
     }
 
     public final void dispatchClickEvent(View view, int which) {
@@ -86,7 +86,7 @@ public abstract class DialogModel extends ActivityModel {
             observable.setValue(new DialogClickEvent(this, which));
             onClick(view, which);
         } else {
-            Log.e("xgf", "dispatchClickEvent: dialog is dismiss");
+            Log.e("model", "dispatchClickEvent: dialog is dismiss");
         }
     }
 
@@ -96,7 +96,6 @@ public abstract class DialogModel extends ActivityModel {
     }
 
     protected void onClick(View view, int which) {
-        Log.e("xgf", "onClick: " + which + "  " + this);
     }
 
     protected abstract Dialog onCreateDialog(Activity activity);

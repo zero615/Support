@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+
+        <variable
+            name="resource"
+            type="com.zero.support.vo.Resource" />
+
+        <variable
+            name="viewModel"
+            type="com.zero.support.app.ResourceViewModel" />
+    </data>
+
+
+    <com.zero.easy.widget.ResourceLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        resource="@{resource}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/simple_view_empty" />
+
+        <include layout="@layout/simple_view_error" />
+
+        <include layout="@layout/simple_view_loading" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/viewContent"
+            onRefreshListener="@{viewModel}"
+            refreshing="@{viewModel.refreshing}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </com.zero.easy.widget.ResourceLayout>
+</layout>

@@ -1,11 +1,14 @@
-package com.zero.support.recycler;
+package com.zero.easy.view;
 
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.zero.support.widget.AspectRatioLayout;
+import com.zero.easy.widget.AspectRatioLayout;
+import com.zero.support.recycler.ItemViewBinder;
+import com.zero.support.recycler.ItemViewHolder;
+
 
 import java.util.List;
 

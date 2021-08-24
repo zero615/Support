@@ -1,4 +1,4 @@
-package com.zero.support.simple.vo;
+package com.zero.easy.vo;
 
 
 import com.zero.support.compat.BR;
