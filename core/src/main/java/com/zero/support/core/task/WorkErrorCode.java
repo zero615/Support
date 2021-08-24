@@ -7,4 +7,5 @@ public interface WorkErrorCode {
     int FILE_VERIFY_ERROR = 10004;
     int FILE_NOT_FOUND = 10005;
     int NETWORK_CONNECT_ERROR = 10006;
+    int CANCELED = 1;
 }

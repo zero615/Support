@@ -5,7 +5,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.zero.support.compat.util.ResourceRequest;
-import com.zero.support.compat.vo.Resource;
+import com.zero.support.vo.Resource;
 import com.zero.support.core.observable.Observable;
 import com.zero.support.core.task.Response;
 

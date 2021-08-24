@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.zero.support.app.SupportFragment;
-import com.zero.support.compat.vo.BaseObject;
-import com.zero.support.compat.vo.Resource;
+import com.zero.support.vo.BaseObject;
+import com.zero.support.vo.Resource;
 import com.zero.support.recycler.Cell;
 import com.zero.support.recycler.CellAdapter;
 import com.zero.support.recycler.ItemViewHolder;

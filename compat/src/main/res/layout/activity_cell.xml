@@ -8,7 +8,7 @@
 
         <variable
             name="resource"
-            type="com.zero.support.compat.vo.Resource" />
+            type="com.zero.support.vo.Resource" />
 
         <variable
             name="viewModel"

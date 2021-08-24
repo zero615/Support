@@ -1,6 +1,5 @@
 package com.zero.support.core.exception;
 
-import com.zero.support.core.WorkException;
 import com.zero.support.core.task.WorkErrorCode;
 
 import java.io.IOException;

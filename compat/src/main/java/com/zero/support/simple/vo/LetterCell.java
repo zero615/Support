@@ -6,7 +6,7 @@ import com.zero.support.compat.R;
 import com.zero.support.recycler.SimpleViewBound;
 import com.zero.support.recycler.annotation.RecyclerViewBind;
 import com.zero.support.recycler.manager.StickyHeaders;
-import com.zero.support.compat.vo.BaseObject;
+import com.zero.support.vo.BaseObject;
 
 @RecyclerViewBind(LetterCell.LetterViewBound.class)
 public class LetterCell extends BaseObject implements StickyHeaders {

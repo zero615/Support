@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zero.support.compat.R;
 import com.zero.support.compat.databinding.ActivityCellBinding;
-import com.zero.support.compat.vo.Resource;
+import com.zero.support.vo.Resource;
 import com.zero.support.recycler.Cell;
 import com.zero.support.recycler.CellAdapter;
 

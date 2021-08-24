@@ -3,11 +3,11 @@ package com.zero.support.sample;
 
 import android.view.View;
 
-import com.zero.support.app.ActivityInjector;
+import com.zero.support.core.AppGlobal;
+import com.zero.support.core.app.ActivityInjector;
 import com.zero.support.app.SupportActivity;
 import com.zero.support.recycler.Cell;
 import com.zero.support.recycler.ItemViewHolder;
-import com.zero.support.recycler.tools.GroupCell;
 import com.zero.support.simple.CellViewModel;
 import com.zero.support.simple.vo.LetterCell;
 
@@ -29,7 +29,7 @@ public class MainViewModel extends CellViewModel<String> {
             @Override
             public void onItemClick(View view, ItemViewHolder holder) {
 //                super.onItemClick(view, holder);
-                ActivityInjector.sendMessage("tesst");
+                AppGlobal.sendMessage("tesst");
             }
         });
         if (isInitialize()){

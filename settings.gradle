@@ -1,5 +1,4 @@
 rootProject.name = "Support"
 include ':app'
-include ':compat'
-include ':signer'
 include ':core'
+include ':ui'

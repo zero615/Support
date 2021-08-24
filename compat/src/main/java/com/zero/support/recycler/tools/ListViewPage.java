@@ -1,6 +1,6 @@
 //package com.zero.support.recycler.tools;
 //
-//import com.zero.support.compat.vo.Resource;
+//import com.zero.support.vo.Resource;
 //import com.zero.support.recycler.Cell;
 //
 //import java.util.List;

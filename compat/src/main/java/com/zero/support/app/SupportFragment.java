@@ -8,12 +8,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.zero.support.core.app.ActivityInjector;
+import com.zero.support.core.app.DialogModel;
+import com.zero.support.core.app.InjectViewModel;
+import com.zero.support.core.app.Injector;
+
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class SupportFragment extends Fragment implements Injector {
     private final Map<Class<?>, SupportViewModel> viewModels = new HashMap<>();
-    private InjectorViewModel injectViewModel;
+    private InjectViewModel injectViewModel;
     private Injector lastInjector;
 
     public final <T extends SupportViewModel> T attachSupportViewModel(Class<T> aClass) {
@@ -75,7 +81,7 @@ public class SupportFragment extends Fragment implements Injector {
         return null;
     }
 
-    public final InjectorViewModel injectViewModel() {
+    public final InjectViewModel injectViewModel() {
         return injectViewModel;
     }
 

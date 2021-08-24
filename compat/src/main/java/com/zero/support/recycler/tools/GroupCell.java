@@ -1,7 +1,7 @@
 package com.zero.support.recycler.tools;
 
 
-import com.zero.support.compat.vo.BaseObject;
+import com.zero.support.vo.BaseObject;
 import com.zero.support.recycler.Cell;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
-import com.zero.support.compat.AppGlobal;
+import com.zero.support.core.AppGlobal;
 
 
 public class PackageDataFetcher implements DataFetcher<Drawable> {
@@ -22,7 +22,7 @@ public class PackageDataFetcher implements DataFetcher<Drawable> {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super Drawable> callback) {
-        PackageManager manager = AppGlobal.getApplication().getPackageManager();
+        PackageManager manager = AppGlobal.currentApplication().getPackageManager();
         callback.onDataReady(manager.getApplicationIcon(model.applicationInfo));
     }
 

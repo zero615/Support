@@ -2,4 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zero.support.core">
 
+    <application>
+        <provider
+            android:name="com.zero.support.core.content.FileProvider"
+            android:authorities="${applicationId}:zero.support.file.provider"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+    </application>
 </manifest>

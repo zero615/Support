@@ -19,7 +19,7 @@ import com.zero.support.compat.R;
 import com.zero.support.compat.databinding.ActivityCellBinding;
 import com.zero.support.recycler.Cell;
 import com.zero.support.recycler.CellAdapter;
-import com.zero.support.compat.vo.Resource;
+import com.zero.support.vo.Resource;
 import com.zero.support.simple.widget.ResourceLayout;
 
 import java.util.List;

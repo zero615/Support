@@ -2,7 +2,7 @@ package com.zero.support.recycler;
 
 import android.graphics.Color;
 
-import com.zero.support.compat.vo.BaseObject;
+import com.zero.support.vo.BaseObject;
 import com.zero.support.recycler.annotation.RecyclerViewBind;
 
 

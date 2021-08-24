@@ -10,6 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.zero.support.compat.ActivityManager;
+import com.zero.support.core.app.ActivityInjector;
+import com.zero.support.core.app.DialogModel;
+import com.zero.support.core.app.Injector;
+import com.zero.support.core.app.InjectViewModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,13 +21,13 @@ import java.util.Map;
 
 public class SupportActivity extends AppCompatActivity implements Injector {
     private final Map<Class<?>, SupportViewModel> viewModels = new HashMap<>();
-    private InjectorViewModel injector;
+    private InjectViewModel injector;
 
     public String getActivityName() {
         return getClass().getSimpleName();
     }
 
-    public final InjectorViewModel injectViewModel() {
+    public final InjectViewModel injectViewModel() {
         return injector;
     }
 
@@ -78,7 +82,7 @@ public class SupportActivity extends AppCompatActivity implements Injector {
 
     @Override
     public Dialog onCreateDialog(DialogModel model, Activity activity) {
-        return model.onCreateDialog(activity);
+        return null;
     }
 
     @Override

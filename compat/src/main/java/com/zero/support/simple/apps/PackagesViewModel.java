@@ -4,7 +4,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import com.zero.support.compat.AppGlobal;
+import com.zero.support.core.AppGlobal;
 import com.zero.support.recycler.Cell;
 import com.zero.support.compat.widget.SlideBar;
 import com.zero.support.simple.CellViewModel;
@@ -22,7 +22,7 @@ public class PackagesViewModel extends CellViewModel<Integer> {
 
     @Override
     protected List<Cell> performExecute(Integer integer) {
-        PackageManager pm = AppGlobal.getApplication().getPackageManager();
+        PackageManager pm = AppGlobal.currentApplication().getPackageManager();
         List<PackageInfo> list = pm.getInstalledPackages(0);
         Map<String, List<AppPackageCell>> map = new HashMap<>(list.size());
         Set<String> set = new HashSet<>();

@@ -1,6 +1,5 @@
 package com.zero.support.core.exception;
 
-import com.zero.support.core.WorkException;
 import com.zero.support.core.task.WorkErrorCode;
 
 public class FileVerifyException extends Exception implements WorkException {

@@ -2,7 +2,7 @@ package com.zero.support.compat.util;
 
 import androidx.annotation.NonNull;
 
-import com.zero.support.compat.vo.Resource;
+import com.zero.support.vo.Resource;
 import com.zero.support.core.observable.Observable;
 import com.zero.support.core.AppExecutor;
 import com.zero.support.core.task.Response;
@@ -88,7 +88,7 @@ public abstract class ResourceRequest<Param, T> {
         try {
             return Response.success(performExecute(param));
         } catch (Throwable e) {
-            return Response.error(WorkExceptionConverter.convert(e), e);
+            return WorkExceptionConverter.convertToResponse(e);
         }
     }
 

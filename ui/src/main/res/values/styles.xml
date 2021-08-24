@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AspectRatioLayout">
+        <attr name="aspectMaxHeight" format="dimension" />
+        <attr name="aspectRatio" format="float" />
+        <attr name="layout_widthRatio" format="float" />
+        <attr name="layout_heightRatio" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="SlideBar">
+        <attr name="android:textSize" />
+        <attr name="android:textColor" />
+        <attr name="slideBarFocusTextColor" format="color" />
+        <attr name="slideBarFocusBackgroundColor" format="color" />
+    </declare-styleable>
+</resources>

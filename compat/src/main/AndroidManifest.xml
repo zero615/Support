@@ -3,10 +3,6 @@
     package="com.zero.support.compat">
 
     <application>
-        <provider
-            android:name="com.zero.support.app.FileProvider"
-            android:authorities="${applicationId}:zero.support.file.provider"
-            android:exported="false"
-            android:grantUriPermissions="true" />
+
     </application>
 </manifest>

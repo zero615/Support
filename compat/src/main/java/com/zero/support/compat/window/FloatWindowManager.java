@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 
 
 import com.zero.support.compat.ActivityManager;
-import com.zero.support.compat.AppGlobal;
+import com.zero.support.core.AppGlobal;
 import com.zero.support.compat.util.Singleton;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class FloatWindowManager {
     private boolean appMode = false;
 
     public FloatWindowManager() {
-        app = AppGlobal.getApplication();
+        app = AppGlobal.currentApplication();
         manager = (WindowManager) app.getSystemService(Context.WINDOW_SERVICE);
         app.registerActivityLifecycleCallbacks(new FloatActivityCallback());
     }

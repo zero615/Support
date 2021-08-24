@@ -1,7 +1,5 @@
 package com.zero.support.core.task;
 
-import android.os.Parcel;
-
 public class Snapshot {
     //代表任务状态
     private int status;
@@ -18,15 +16,6 @@ public class Snapshot {
             this.response = snapshot.response;
         }
     }
-
-
-    protected Snapshot(Parcel in) {
-        status = in.readInt();
-        if (in.readString() != null) {
-            progress = Progress.CREATOR.createFromParcel(in);
-        }
-    }
-
 
     @SuppressWarnings("unchecked")
     public <T> Response<T> response() {

@@ -9,7 +9,7 @@ import com.zero.support.recycler.CellAdapter;
 import com.zero.support.recycler.ItemViewHolder;
 import com.zero.support.recycler.SimpleViewBound;
 import com.zero.support.recycler.annotation.RecyclerViewBind;
-import com.zero.support.compat.vo.BaseObject;
+import com.zero.support.vo.BaseObject;
 
 @RecyclerViewBind(ImportCell.ImportViewBinder.class)
 public class ImportCell extends BaseObject {

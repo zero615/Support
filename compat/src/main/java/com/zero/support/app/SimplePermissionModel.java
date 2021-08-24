@@ -5,6 +5,14 @@ import android.net.Uri;
 import android.provider.Settings;
 
 
+import com.zero.support.core.app.ActivityResultEvent;
+import com.zero.support.core.app.ActivityResultModel;
+import com.zero.support.core.app.DialogClickEvent;
+import com.zero.support.core.app.DialogModel;
+import com.zero.support.core.app.InjectViewModel;
+import com.zero.support.core.app.PermissionEvent;
+import com.zero.support.core.app.PermissionHelper;
+import com.zero.support.core.app.PermissionModel;
 import com.zero.support.core.observable.Observer;
 
 public class SimplePermissionModel extends PermissionModel {
@@ -14,11 +22,11 @@ public class SimplePermissionModel extends PermissionModel {
     private final DeniedObserver deniedObserver = new DeniedObserver();
 
     private class RationObserver implements Observer<DialogClickEvent> {
-        InjectorViewModel viewModel;
+        InjectViewModel viewModel;
         PermissionEvent event;
 
 
-        public void bind(InjectorViewModel viewModel,PermissionEvent event){
+        public void bind(InjectViewModel viewModel,PermissionEvent event){
             this.viewModel = viewModel;
             this.event = event;
         }
@@ -35,10 +43,10 @@ public class SimplePermissionModel extends PermissionModel {
     }
 
     private class DeniedObserver implements Observer<DialogClickEvent> {
-        InjectorViewModel viewModel;
+        InjectViewModel viewModel;
         PermissionEvent event;
 
-        public void bind(InjectorViewModel viewModel,PermissionEvent event){
+        public void bind(InjectViewModel viewModel,PermissionEvent event){
             this.viewModel = viewModel;
             this.event = event;
         }
@@ -77,7 +85,7 @@ public class SimplePermissionModel extends PermissionModel {
 
     @Override
     protected void onReceivePermissionEvent(final PermissionEvent event) {
-        final InjectorViewModel viewModel = requireViewModel();
+        final InjectViewModel viewModel = requireViewModel();
         boolean denied = event.isPermanentlyDenied();
 
         if (denied && builder.denied != null) {

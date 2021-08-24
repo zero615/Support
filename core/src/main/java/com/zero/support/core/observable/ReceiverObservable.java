@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.zero.support.compat.AppGlobal;
 import com.zero.support.core.AppExecutor;
+import com.zero.support.core.AppGlobal;
 
 public class ReceiverObservable extends SerialObservable<Intent> {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -39,11 +39,11 @@ public class ReceiverObservable extends SerialObservable<Intent> {
 
 
     protected void onActive() {
-        AppGlobal.getApplication().registerReceiver(receiver, filter);
+        AppGlobal.currentApplication().registerReceiver(receiver, filter);
     }
 
     protected void onInactive() {
-        AppGlobal.getApplication().unregisterReceiver(receiver);
+        AppGlobal.currentApplication().unregisterReceiver(receiver);
         reset();
     }
 }

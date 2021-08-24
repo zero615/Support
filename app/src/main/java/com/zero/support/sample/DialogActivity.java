@@ -8,11 +8,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.zero.support.app.ButtonActivity;
-import com.zero.support.app.DialogClickEvent;
+import com.zero.support.core.app.DialogClickEvent;
 import com.zero.support.app.SimpleDialogModel;
 import com.zero.support.app.SimplePermissionModel;
-import com.zero.support.app.Tip;
-import com.zero.support.compat.AppGlobal;
+import com.zero.support.core.app.Tip;
+import com.zero.support.core.AppGlobal;
 import com.zero.support.core.observable.ConnectivityObservable;
 import com.zero.support.core.observable.Observable;
 import com.zero.support.core.observable.Observer;

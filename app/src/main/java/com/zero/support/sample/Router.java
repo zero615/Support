@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
-import com.zero.support.compat.vo.BaseObject;
+import com.zero.support.vo.BaseObject;
 import com.zero.support.recycler.ItemViewHolder;
 
 public class Router extends BaseObject {

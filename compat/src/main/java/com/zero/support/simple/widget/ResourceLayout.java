@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.BindingAdapter;
 
 import com.zero.support.compat.R;
-import com.zero.support.compat.vo.Resource;
+import com.zero.support.vo.Resource;
 
 public class ResourceLayout extends FrameLayout {
 

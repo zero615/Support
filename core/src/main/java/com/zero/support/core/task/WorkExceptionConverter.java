@@ -1,7 +1,7 @@
 package com.zero.support.core.task;
 
 
-import com.zero.support.core.WorkException;
+import com.zero.support.core.exception.WorkException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class WorkExceptionConverter {
     }
 
     @SuppressWarnings("all")
-    public static<T> Response<T> convertToResponse(Throwable throwable) {
+    public static <T> Response<T> convertToResponse(Throwable throwable) {
         Response<?> response = null;
         final WorkExceptionConverter converter = getDefault();
         if (converter != null) {
