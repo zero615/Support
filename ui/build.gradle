@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.zero615:Support:1.0.0'
+    api project(":core")
     api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     api "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'androidx.appcompat:appcompat:1.3.1'
