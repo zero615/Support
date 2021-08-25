@@ -6,8 +6,6 @@ import java.util.List;
 
 /**
  * 保证所有的事件都会被消费, 消费完后返回空值
- *
- * @param <T>
  */
 public class PromiseObservable<T> extends Observable<T> {
     private final LinkedList<T> promises = new LinkedList<>();

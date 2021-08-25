@@ -3,12 +3,22 @@ package com.zero.support.core.app;
 public class ActivityModel {
     private InjectViewModel injectViewModel;
 
-    public final void attach(InjectViewModel injector) {
+    final void attach(InjectViewModel injector) {
         this.injectViewModel = injector;
+        onAttachedViewModel(injector);
     }
 
-    public final void detach() {
+    protected void onAttachedViewModel(InjectViewModel injector) {
+
+    }
+
+    final void detach() {
+        onDetachedViewModel();
         this.injectViewModel = null;
+    }
+
+    protected void onDetachedViewModel() {
+
     }
 
     public final InjectViewModel requireViewModel() {
@@ -18,7 +28,7 @@ public class ActivityModel {
         return injectViewModel;
     }
 
-    public InjectViewModel getViewModel() {
+    public final InjectViewModel getViewModel() {
         return injectViewModel;
     }
 

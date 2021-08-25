@@ -3,14 +3,13 @@ package com.zero.support.core.app;
 
 import android.app.Activity;
 import android.app.Application;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Looper;
 
 import com.zero.support.core.AppGlobal;
 
 
-public class InjectViewModel {
+public final class InjectViewModel {
 
     private InjectFragment fragment;
     private final InjectorHelper injectorHelper = new InjectorHelper();
@@ -20,7 +19,7 @@ public class InjectViewModel {
         return injector;
     }
 
-    public void setCurrentInjector(Injector injector) {
+    public final void setCurrentInjector(Injector injector) {
         this.injector = injector;
     }
 
@@ -42,17 +41,17 @@ public class InjectViewModel {
     }
 
 
-    public final Tip getCurrentTip() {
-        return injectorHelper.tipsEvent.getValue();
+    public final LayerModel<?> getCurrentWindowModel(int windowType) {
+        return injectorHelper.getCurrentWindowModel(windowType);
     }
 
 
-    public PermissionModel peekPermissionModel() {
+    public final PermissionModel peekPermissionModel() {
         return injectorHelper.permissionModels.getValue();
     }
 
 
-    public ActivityResultModel peekActivityResultModel() {
+    public final ActivityResultModel peekActivityResultModel() {
         return injectorHelper.resultModels.getValue();
     }
 
@@ -85,9 +84,9 @@ public class InjectViewModel {
 
     public void dismiss() {
         assertMainThread("dismiss");
-        Tip tip = getCurrentTip();
-        if (tip != null) {
-            tip.dismiss();
+        LayerModel<?> model = injectorHelper.getCurrentWindowModel(LayerModel.TYPE_SERIAL_NOTIFICATION);
+        if (model != null) {
+            model.dismiss();
         }
     }
 
@@ -97,17 +96,23 @@ public class InjectViewModel {
         return model;
     }
 
-    public final void requestTip(Tip tip) {
-        Tip topTip = getCurrentTip();
-        if (topTip != null) {
-            topTip.dismiss();
-        }
-        tip.attach(this);
-        injectorHelper.tipsEvent.setValue(tip);
+
+    public final <T extends LayerModel<?>> T requestWindow(T model) {
+        injectorHelper.requestWindow(model);
+        return model;
     }
 
-    public interface DialogCreator {
-        Dialog onCreateDialog(DialogModel model, Activity activity);
+    public final <T extends LayerModel<?>> T requestWindowAtFront(T model) {
+        injectorHelper.requestWindowAtFront(model);
+        return model;
+    }
+
+    public final void removeWindow(LayerModel<?> model) {
+        injectorHelper.removeWindow(model);
+    }
+
+    public interface WindowCreator {
+        Object onCreateTarget(LayerModel<?> model, Activity activity);
     }
 
     public interface MessageDispatcher {
@@ -115,40 +120,11 @@ public class InjectViewModel {
     }
 
 
-    public final DialogModel requestDialog(DialogModel model) {
-        model.attach(this);
-        injectorHelper.dialogEvent.setValue(model);
-        return model;
-    }
-
-    public final DialogModel requestDialogAtFront(DialogModel model) {
-        model.attach(this);
-        injectorHelper.dialogEvent.postAtFront(model);
-        return model;
-    }
-
     public final ActivityResultModel requestActivityResult(ActivityResultModel model) {
         model.attach(this);
         injectorHelper.resultModels.setValue(model);
         return model;
     }
-
-    public void removeDialog(DialogModel model) {
-        if (!model.isEnableCached()) {
-            injectorHelper.dialogs.remove(model.getClass());
-        }
-        injectorHelper.dialogEvent.remove(model);
-        model.detach();
-    }
-
-    public void removeTip(Tip tip) {
-        if (!tip.isEnableCached()) {
-            injectorHelper.dialogs.remove(tip.getClass());
-        }
-        injectorHelper.tipsEvent.remove(tip);
-        tip.detach();
-    }
-
 
     public Activity requireActivity() {
         Fragment fragment = getFragment();

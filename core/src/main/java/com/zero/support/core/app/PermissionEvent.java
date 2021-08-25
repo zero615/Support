@@ -12,6 +12,7 @@ public class PermissionEvent {
     private final int[] grantResults;
     private final List<String> deniedPermissions = new ArrayList<>();
     private final List<String> grantPermissions = new ArrayList<>();
+    private final boolean denied;
 
     public PermissionEvent(PermissionModel model, String[] permissions, int[] grantResults) {
         this.model = model;
@@ -24,6 +25,15 @@ public class PermissionEvent {
                 deniedPermissions.add(permissions[i]);
             }
         }
+        denied = PermissionHelper.hasPermissionPermanentlyDenied(model.requireViewModel().requireActivity(), deniedPermissions);
+    }
+
+    public List<String> grantPermissions() {
+        return grantPermissions;
+    }
+
+    public List<String> deniedPermissions() {
+        return deniedPermissions;
     }
 
     public String[] getPermissions() {
@@ -31,7 +41,7 @@ public class PermissionEvent {
     }
 
     public boolean isPermanentlyDenied() {
-        return PermissionHelper.hasPermissionPermanentlyDenied(model.requireViewModel().requireActivity(), deniedPermissions);
+        return denied;
     }
 
     @Override

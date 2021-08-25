@@ -32,7 +32,6 @@ public class SimpleDialogModel extends DialogModel {
     }
 
     protected SimpleDialogModel(Builder builder) {
-        super(builder.name);
         this.builder = builder;
     }
 
@@ -40,7 +39,6 @@ public class SimpleDialogModel extends DialogModel {
     @Override
     public void onClick(View view, int which) {
         super.onClick(view, which);
-        dismiss();
     }
 
     public String getNegative() {
@@ -97,7 +95,6 @@ public class SimpleDialogModel extends DialogModel {
                 };
                 spanned.removeSpan(span);
                 spanned.setSpan(clickableSpan, start, end, flag);
-
             }
             return spanned;
         } catch (Exception e) {
@@ -111,25 +108,25 @@ public class SimpleDialogModel extends DialogModel {
     }
 
     @Override
-    protected Dialog onCreateDialog(Activity activity) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+    protected Dialog onCreateLayer(Activity activity) {
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
         String value = getTitle();
         if (value != null) {
-            builder.setTitle(value);
+            alertBuilder.setTitle(value);
         }
         boolean handled = false;
         if (this.builder.contentViewId != 0) {
-            builder.setView(this.builder.contentViewId);
+            alertBuilder.setView(this.builder.contentViewId);
             handled = true;
         } else if (this.builder.contentView != null) {
-            builder.setView(this.builder.contentView);
+            alertBuilder.setView(this.builder.contentView);
             handled = true;
         } else if (this.builder.viewBinder != null) {
             View view = this.builder.viewBinder.onCreateView(activity, null);
             if (view != null) {
                 this.builder.viewBinder.onBindView(view, this);
                 handled = true;
-                builder.setView(view);
+                alertBuilder.setView(view);
             }
         }
         if (!handled) {
@@ -148,7 +145,7 @@ public class SimpleDialogModel extends DialogModel {
                 }
                 webView.loadUrl(String.valueOf(getContent()));
             } else {
-                builder.setMessage(getContent());
+                alertBuilder.setMessage(getContent());
             }
         }
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -158,23 +155,58 @@ public class SimpleDialogModel extends DialogModel {
                 dispatchClickEvent(alertDialog.getButton(which), which);
             }
         };
-        builder.setNegativeButton(getNegative(), listener);
-        builder.setPositiveButton(getPositive(), listener);
-        builder.setCancelable(this.builder.cancelable);
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        alertBuilder.setNegativeButton(getNegative(), listener);
+        alertBuilder.setPositiveButton(getPositive(), listener);
+        alertBuilder.setCancelable(this.builder.cancelable);
+        alertBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 dispatchClickEvent(null, DialogInterface.BUTTON_NEUTRAL);
+                dismiss();
             }
         });
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        alertBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-
             }
         });
-        return builder.create();
+        AlertDialog dialog = alertBuilder.create();
+        dialog.show();
+        dialog.dismiss();
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchClickEvent(v, DialogInterface.BUTTON_POSITIVE);
+                if (builder.clickDismiss) {
+                    dismiss();
+                }
+            }
+        });
+        dialog.getButton(Dialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchClickEvent(v, DialogInterface.BUTTON_NEGATIVE);
+                if (builder.clickDismiss) {
+                    dismiss();
+                }
+            }
+        });
+        dialog.getButton(Dialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchClickEvent(v, DialogInterface.BUTTON_NEUTRAL);
+                if (builder.clickDismiss) {
+                    dismiss();
+                }
+            }
+        });
+        return dialog;
     }
+
+    public Builder newBuilder() {
+        return new Builder(builder);
+    }
+
 
     public interface ClickInterceptor {
         String intercept(String url);
@@ -200,14 +232,43 @@ public class SimpleDialogModel extends DialogModel {
         private ClickInterceptor interceptor;
         private int contentViewId;
         private int textType;
-        private boolean cancelable = true;
+        private boolean cancelable = false;
         private WebView webView;
         private View contentView;
-
         private ViewBinder viewBinder;
+        private boolean clickDismiss = true;
+
+        public Builder(Builder builder) {
+            this.negative = builder.negative;
+            this.negativeId = builder.negativeId;
+            this.positive = builder.positive;
+            this.positiveId = builder.positiveId;
+            this.content = builder.content;
+            this.args = builder.args;
+            this.contentId = builder.contentId;
+            this.title = builder.title;
+            this.titleId = builder.titleId;
+            this.name = builder.name;
+            this.interceptor = builder.interceptor;
+            this.contentViewId = builder.contentViewId;
+            this.textType = builder.textType;
+            this.cancelable = builder.cancelable;
+            this.webView = builder.webView;
+            this.contentView = builder.contentView;
+            this.viewBinder = builder.viewBinder;
+            this.clickDismiss = builder.clickDismiss;
+        }
+
+        public Builder() {
+        }
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder clickDismiss(boolean dismiss) {
+            this.clickDismiss = dismiss;
             return this;
         }
 

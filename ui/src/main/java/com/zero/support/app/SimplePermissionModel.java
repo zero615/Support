@@ -89,11 +89,11 @@ public class SimplePermissionModel extends PermissionModel {
 
         if (denied && builder.denied != null) {
             deniedObserver.bind(viewModel,event);
-            viewModel.requestDialog(builder.denied).click().observe(deniedObserver);
+            viewModel.requestWindow(builder.denied).click().observe(deniedObserver);
         } else if (!denied && !event.isGranted() && builder.ration != null) {
             //非永久拒绝
             rationObserver.bind(viewModel,event);
-            viewModel.requestDialog(builder.ration).click().observe(rationObserver);
+            viewModel.requestWindow(builder.ration).click().observe(rationObserver);
         } else {
             dispatchPermissionEvent(event);
         }

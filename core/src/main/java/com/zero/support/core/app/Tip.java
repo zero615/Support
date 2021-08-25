@@ -20,10 +20,13 @@ public final class Tip extends DialogModel implements Runnable {
      * 显示信息图标
      */
     public static final int TYPE_INFO = 4;
+
+    public static final int TYPE_DISMISS = 4;
     public int type;
     public String message;
 
     public Tip(int type, String message) {
+        super(LayerModel.TYPE_SERIAL_NOTIFICATION);
         this.type = type;
         this.message = message;
     }
@@ -32,32 +35,27 @@ public final class Tip extends DialogModel implements Runnable {
         return new Tip(TYPE_LOADING, null);
     }
 
-
-    public void dismiss() {
-        InjectViewModel viewModel = requireViewModel();
-        Dialog dialog = getDialog();
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
-        if (viewModel != null) {
-            viewModel.removeTip(this);
-        }
-        detachDialog(dialog);
+    @Override
+    protected boolean isEnableCached() {
+        return true;
     }
 
     @Override
-    protected void onBindDialog(Dialog dialog) {
-        TipDialog tipDialog = (TipDialog) dialog;
+    protected void onAttachedToModel(Dialog layer) {
+        super.onAttachedToModel(layer);
+        TipDialog tipDialog = (TipDialog) layer;
         tipDialog.dispatchTipEvent(this);
         if (type == TYPE_SUCCESS) {
             AppExecutor.getMainHandler().postDelayed(this, 700);
+        } else if (type == TYPE_DISMISS) {
+            dismiss();
         } else if (type != TYPE_LOADING) {
             AppExecutor.getMainHandler().postDelayed(this, 1500);
         }
     }
 
     @Override
-    protected Dialog onCreateDialog(Activity activity) {
+    protected Dialog onCreateLayer(Activity activity) {
         return new TipDialog(activity);
     }
 

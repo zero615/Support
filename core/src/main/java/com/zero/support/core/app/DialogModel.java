@@ -8,41 +8,44 @@ import android.view.View;
 import com.zero.support.core.observable.Observable;
 
 
-public abstract class DialogModel extends ActivityModel {
+public abstract class DialogModel extends LayerModel<Dialog> {
     private final Observable<DialogClickEvent> observable = new Observable<>();
-    private Dialog dialog;
     private int which;
-    private String dialogName;
-
-    public boolean isEnableCached() {
-        return false;
-    }
-
-    public String getDialogName() {
-        return dialogName;
-    }
 
     public DialogModel() {
+        super(LayerModel.TYPE_SERIAL);
     }
 
-    public DialogModel(String dialogName) {
-        this.dialogName = dialogName;
+    public DialogModel(int windowType) {
+        super(windowType);
     }
 
-    public Observable<DialogClickEvent> click() {
+    public final Observable<DialogClickEvent> click() {
         return observable;
     }
 
-    final void show(Dialog dialog) {
+
+    @Override
+    protected void onAttachedToModel(Dialog layer) {
+        super.onAttachedToModel(layer);
         which = 0;
         this.click().reset();
-        this.dialog = dialog;
-        this.dialog.show();
-        onBindDialog(dialog);
+        if (!layer.isShowing()) {
+            layer.show();
+        }
     }
 
-    protected void onBindDialog(Dialog dialog) {
+    @Override
+    protected Dialog onCreateLayer(Activity activity) {
+        return super.onCreateLayer(activity);
+    }
 
+    @Override
+    protected void onDetachedFromModel(Dialog layer) {
+        super.onDetachedFromModel(layer);
+        if (layer.isShowing()) {
+            layer.dismiss();
+        }
     }
 
     public boolean isClicked() {
@@ -50,38 +53,8 @@ public abstract class DialogModel extends ActivityModel {
     }
 
 
-    public Dialog getDialog() {
-        return dialog;
-    }
-
-    public final Dialog requireDialog() {
-        final Dialog dialog = this.dialog;
-        if (dialog == null) {
-            throw new IllegalStateException("dialog is null");
-        }
-        return dialog;
-    }
-
-    void detachDialog(Dialog dialog) {
-        if (this.dialog == dialog && dialog != null) {
-            dialog.dismiss();
-            this.dialog = null;
-        }
-    }
-
-    public void dismiss() {
-        InjectViewModel viewModel = getViewModel();
-        if (viewModel != null) {
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
-            }
-            viewModel.removeDialog(this);
-            dialog = null;
-        }
-    }
-
     public final void dispatchClickEvent(View view, int which) {
-        if (this.dialog != null) {
+        if (this.getLayer() != null) {
             this.which = which;
             observable.setValue(new DialogClickEvent(this, which));
             onClick(view, which);
@@ -91,13 +64,10 @@ public abstract class DialogModel extends ActivityModel {
     }
 
 
-    public int which() {
+    public final int which() {
         return which;
     }
 
     protected void onClick(View view, int which) {
     }
-
-    protected abstract Dialog onCreateDialog(Activity activity);
-
 }

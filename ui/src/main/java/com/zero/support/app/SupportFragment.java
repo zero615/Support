@@ -1,7 +1,6 @@
 package com.zero.support.app;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -9,9 +8,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.zero.support.core.app.ActivityInjector;
-import com.zero.support.core.app.DialogModel;
 import com.zero.support.core.app.InjectViewModel;
 import com.zero.support.core.app.Injector;
+import com.zero.support.core.app.LayerModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -94,12 +93,12 @@ public class SupportFragment extends Fragment implements Injector {
 
 
     @Override
-    public Dialog onCreateDialog(DialogModel model, Activity activity) {
-        return null;
+    public boolean dispatchMessage(Object msg) {
+        return false;
     }
 
     @Override
-    public boolean dispatchMessage(Object msg) {
-        return false;
+    public Object onCreateTarget(LayerModel<?> model, Activity activity) {
+        return null;
     }
 }

@@ -6,10 +6,10 @@ import androidx.annotation.StringRes;
 
 import com.zero.support.core.AppExecutor;
 import com.zero.support.core.app.ActivityResultModel;
-import com.zero.support.core.app.DialogModel;
 import com.zero.support.core.app.InjectViewModel;
 import com.zero.support.core.app.PermissionModel;
 import com.zero.support.core.app.Tip;
+import com.zero.support.core.app.LayerModel;
 
 
 public abstract class SupportViewModel extends ContextViewModel {
@@ -62,12 +62,12 @@ public abstract class SupportViewModel extends ContextViewModel {
     public void postTip(int type, String message) {
         final Tip tip = new Tip(type, message);
         if (AppExecutor.isMainThread()) {
-            requestTip(tip);
+            requestWindowModel(tip);
         } else {
             AppExecutor.main().execute(new Runnable() {
                 @Override
                 public void run() {
-                    requestTip(tip);
+                    requestWindowModel(tip);
                 }
             });
         }
@@ -84,7 +84,7 @@ public abstract class SupportViewModel extends ContextViewModel {
 
     public final void dismiss() {
         assertMainThread("dismiss");
-        Tip tip = requestViewModel.getCurrentTip();
+        LayerModel tip = requestViewModel.getCurrentWindowModel(LayerModel.TYPE_SERIAL_NOTIFICATION);
         if (tip != null) {
             tip.dismiss();
         }
@@ -107,12 +107,12 @@ public abstract class SupportViewModel extends ContextViewModel {
         return requestViewModel.requestPermission(model);
     }
 
-    public final void requestTip(Tip tip) {
-        requestViewModel.requestTip(tip);
+    public final <T extends LayerModel<?>> T requestWindowModel(T model) {
+        return requestViewModel.requestWindow(model);
     }
 
-    public final DialogModel requestDialog(DialogModel model) {
-        return requestViewModel.requestDialog(model);
+    public final <T extends LayerModel<?>> T requestWindowAtFront(T model) {
+        return requestViewModel.requestWindow(model);
     }
 
     public final ActivityResultModel requestActivityResult(ActivityResultModel model) {

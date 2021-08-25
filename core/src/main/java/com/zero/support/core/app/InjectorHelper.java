@@ -1,32 +1,33 @@
 package com.zero.support.core.app;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
-
 import com.zero.support.core.AppGlobal;
+import com.zero.support.core.observable.Observable;
 import com.zero.support.core.observable.PromiseObservable;
 import com.zero.support.core.observable.SingleLiveEvent;
-
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class InjectorHelper {
-    final Map<Class<?>, Dialog> dialogs = new HashMap<>();
+    final Map<Class<?>, Object> targets = new HashMap<>();
+    final Map<LayerModel<?>, Object> windowTargets = new HashMap<>();
 
     final PromiseObservable<PermissionModel> permissionModels = new PromiseObservable<>();
 
     final PromiseObservable<ActivityResultModel> resultModels = new PromiseObservable<>();
 
-    final PromiseObservable<DialogModel> dialogEvent = new PromiseObservable<>();
+    final PromiseObservable<LayerModel<?>> serialWindows = new PromiseObservable<>();
 
-    final PromiseObservable<Tip> tipsEvent = new PromiseObservable<>();
+    final PromiseObservable<LayerModel<?>> notificationWindows = new PromiseObservable<>();
+
+    final Observable<LayerModel<?>> windows = new PromiseObservable<>();
 
     final SingleLiveEvent<Object> messageEvent = new SingleLiveEvent<>();
 
@@ -58,25 +59,17 @@ public class InjectorHelper {
                 }
             }
         });
-        dialogEvent.asLive().observe(fragment, new Observer<DialogModel>() {
+        Observer<LayerModel<?>> observer = new Observer<LayerModel<?>>() {
             @Override
-            public void onChanged(DialogModel model) {
+            public void onChanged(LayerModel<?> model) {
                 if (model == null) {
                     return;
                 }
                 dispatchDialogEvent(model);
             }
-
-        });
-        tipsEvent.asLive().observe(fragment, new Observer<DialogModel>() {
-            @Override
-            public void onChanged(DialogModel model) {
-                if (model == null) {
-                    return;
-                }
-                dispatchDialogEvent(model);
-            }
-        });
+        };
+        serialWindows.asLive().observe(fragment, observer);
+        notificationWindows.asLive().observe(fragment, observer);
         messageEvent.observe(fragment, new Observer<Object>() {
             @Override
             public void onChanged(@Nullable Object msg) {
@@ -97,25 +90,30 @@ public class InjectorHelper {
     }
 
 
-    protected void dispatchDialogEvent(DialogModel model) {
-        Dialog dialog = dialogs.get(model.getClass());
-        Activity activity = fragment.getActivity();
-        Injector injector = fragment.getInjectViewModel().getCurrentInjector();
-        if (injector != null && activity != injector) {
-            dialog = injector.onCreateDialog(model, activity);
-        }
-        if (activity instanceof InjectViewModel.DialogCreator) {
-            dialog = ((InjectViewModel.DialogCreator) activity).onCreateDialog(model, activity);
-        }
-        if (dialog == null) {
-            dialog = model.onCreateDialog(fragment.getActivity());
-            if (dialog == null) {
-                Log.e("support", "dispatchDialogEvent: fail for " + model);
-                return;
+    @SuppressWarnings("all")
+    protected void dispatchDialogEvent(LayerModel model) {
+        Object target = targets.get(model.getClass());
+        if (target == null) {
+            Activity activity = fragment.getActivity();
+            Injector injector = fragment.getInjectViewModel().getCurrentInjector();
+            if (injector != null && activity != injector) {
+                target = injector.onCreateTarget(model, activity);
             }
-            dialogs.put(model.getClass(), dialog);
+            if (activity instanceof InjectViewModel.WindowCreator) {
+                target = ((InjectViewModel.WindowCreator) activity).onCreateTarget(model, activity);
+            }
+            if (target == null) {
+                target = model.onCreateLayer(fragment.getActivity());
+                if (target == null) {
+                    Log.e("support", "dispatchDialogEvent: fail for " + model);
+                    model.dismiss();
+                    return;
+                }
+            }
+            targets.put(model.getClass(), target);
         }
-        model.show(dialog);
+        windowTargets.put(model, target);
+        model.show(target);
     }
 
 
@@ -137,9 +135,87 @@ public class InjectorHelper {
         }
     }
 
-    void detachFragment() {
-        for (Dialog dialog : dialogs.values()) {
-            dialog.dismiss();
+
+    @SuppressWarnings("all")
+    final void detachFragment() {
+        for (LayerModel dialog : windowTargets.keySet()) {
+            dialog.detachLayer();
+        }
+        windowTargets.clear();
+        targets.clear();
+    }
+
+    final void requestWindowAtFront(LayerModel<?> model) {
+        if (model.isAttached()) {
+            model.dismiss();
+        }
+        int windowType = model.getLayerType();
+        if (windowType == LayerModel.TYPE_SERIAL) {
+            model.attach(fragment.getInjectViewModel());
+            serialWindows.postAtFront(model);
+        } else if (windowType == LayerModel.TYPE_SERIAL_NOTIFICATION) {
+            LayerModel<?> layerModel = notificationWindows.getValue();
+            if (layerModel != null) {
+                layerModel.dismiss();
+            }
+            model.attach(fragment.getInjectViewModel());
+            notificationWindows.postAtFront(model);
+        } else if (windowType == LayerModel.TYPE_ALL) {
+            model.attach(fragment.getInjectViewModel());
+            windows.setValue(model);
         }
     }
+
+    final void requestWindow(LayerModel<?> model) {
+        if (model.isAttached()) {
+            model.dismiss();
+        }
+        int windowType = model.getLayerType();
+        if (windowType == LayerModel.TYPE_SERIAL) {
+            model.attach(fragment.getInjectViewModel());
+            serialWindows.setValue(model);
+        } else if (windowType == LayerModel.TYPE_SERIAL_NOTIFICATION) {
+            LayerModel<?> layerModel = notificationWindows.getValue();
+            if (layerModel != null) {
+                layerModel.dismiss();
+            }
+            model.attach(fragment.getInjectViewModel());
+            notificationWindows.setValue(model);
+        } else if (windowType == LayerModel.TYPE_ALL) {
+            model.attach(fragment.getInjectViewModel());
+            windows.setValue(model);
+        }
+    }
+
+    final LayerModel<?> getCurrentWindowModel(int windowType) {
+        if (windowType == LayerModel.TYPE_SERIAL) {
+            return serialWindows.getValue();
+        } else if (windowType == LayerModel.TYPE_SERIAL_NOTIFICATION) {
+            return notificationWindows.getValue();
+        } else if (windowType == LayerModel.TYPE_ALL) {
+            return windows.getValue();
+        }
+        return null;
+    }
+
+    @SuppressWarnings("all")
+    final void removeWindow(LayerModel model) {
+        Object target = windowTargets.remove(model);
+        if (!model.isEnableCached()) {
+            targets.remove(model.getClass());
+        }
+        if (target != null) {
+            model.detachLayer();
+        }
+        model.detach();
+        int windowType = model.getLayerType();
+        if (windowType == LayerModel.TYPE_SERIAL) {
+            serialWindows.remove(model);
+        } else if (windowType == LayerModel.TYPE_SERIAL_NOTIFICATION) {
+            notificationWindows.remove(model);
+        } else if (windowType == LayerModel.TYPE_ALL) {
+            windows.reset();
+        }
+    }
+
 }

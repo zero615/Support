@@ -28,7 +28,7 @@ public class DialogActivity extends ButtonActivity {
         addButton("show tip", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                injectViewModel().requestTip(Tip.loading());
+                injectViewModel().requestWindow(Tip.loading());
 
                 v.postDelayed(new Runnable() {
                     @Override
@@ -49,7 +49,7 @@ public class DialogActivity extends ButtonActivity {
         addButton("show dialog", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                injectViewModel().requestDialog(new SimpleDialogModel.Builder().content("hahahaha").build()).click().observe(new Observer<DialogClickEvent>() {
+                injectViewModel().requestWindow(new SimpleDialogModel.Builder().content("hahahaha").build()).click().observe(new Observer<DialogClickEvent>() {
                     @Override
                     public void onChanged(DialogClickEvent dialogClickEvent) {
                         AppGlobal.sendMessage("click:" + dialogClickEvent.which());
@@ -61,7 +61,7 @@ public class DialogActivity extends ButtonActivity {
         addButton("show dialog with title", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                injectViewModel().requestDialog(new SimpleDialogModel.Builder()
+                injectViewModel().requestWindow(new SimpleDialogModel.Builder()
                         .title("xxx")
                         .content("hahahaha").build()).click().observe(new Observer<DialogClickEvent>() {
                     @Override
@@ -75,7 +75,7 @@ public class DialogActivity extends ButtonActivity {
         addButton("show dialog with title positive", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                injectViewModel().requestDialog(new SimpleDialogModel.Builder()
+                injectViewModel().requestWindow(new SimpleDialogModel.Builder()
                         .title("xxx")
                         .positive("确定")
                         .content("hahahaha").build()).click().observe(new Observer<DialogClickEvent>() {
@@ -91,7 +91,7 @@ public class DialogActivity extends ButtonActivity {
         addButton("show dialog with title negative", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                injectViewModel().requestDialog(new SimpleDialogModel.Builder()
+                injectViewModel().requestWindow(new SimpleDialogModel.Builder()
                         .title("xxx")
                         .negative("取消")
                         .content("hahahaha").build()).click().observe(new Observer<DialogClickEvent>() {
@@ -106,7 +106,7 @@ public class DialogActivity extends ButtonActivity {
         addButton("show dialog with title negative positive", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                injectViewModel().requestDialog(new SimpleDialogModel.Builder()
+                injectViewModel().requestWindow(new SimpleDialogModel.Builder()
                         .title("xxx")
                         .negative("取消")
                         .positive("确定")
@@ -122,7 +122,7 @@ public class DialogActivity extends ButtonActivity {
         addButton("show dialog all", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                injectViewModel().requestDialog(new SimpleDialogModel.Builder()
+                injectViewModel().requestWindow(new SimpleDialogModel.Builder()
                         .title("xxx")
                         .content("sadfhaskdjhflasdhflshfla;sdhfkljshfs")
                         .negative("取消")
