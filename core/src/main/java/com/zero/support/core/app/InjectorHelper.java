@@ -31,10 +31,13 @@ public class InjectorHelper {
 
     final SingleLiveEvent<Object> messageEvent = new SingleLiveEvent<>();
 
-    private InjectFragment fragment;
+    private final InjectViewModel viewModel;
+
+    public InjectorHelper(InjectViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
     public void onAttachFragment(final InjectViewModel viewModel, final InjectFragment fragment) {
-        this.fragment = fragment;
         permissionModels.asLive().observe(fragment, new Observer<PermissionModel>() {
             @Override
             public void onChanged(PermissionModel model) {
@@ -75,7 +78,7 @@ public class InjectorHelper {
             public void onChanged(@Nullable Object msg) {
                 Activity activity = viewModel.requireActivity();
                 boolean handled = false;
-                Injector injector = fragment.getInjectViewModel().getCurrentInjector();
+                Injector injector = viewModel.getCurrentInjector();
                 if (injector != null && activity != injector) {
                     handled = injector.dispatchMessage(msg);
                 }
@@ -94,8 +97,8 @@ public class InjectorHelper {
     protected void dispatchDialogEvent(LayerModel model) {
         Object target = targets.get(model.getClass());
         if (target == null) {
-            Activity activity = fragment.getActivity();
-            Injector injector = fragment.getInjectViewModel().getCurrentInjector();
+            Activity activity = viewModel.getActivity();
+            Injector injector = viewModel.getCurrentInjector();
             if (injector != null && activity != injector) {
                 target = injector.onCreateTarget(model, activity);
             }
@@ -103,7 +106,7 @@ public class InjectorHelper {
                 target = ((InjectViewModel.WindowCreator) activity).onCreateTarget(model, activity);
             }
             if (target == null) {
-                target = model.onCreateLayer(fragment.getActivity());
+                target = model.onCreateLayer(viewModel.getActivity());
                 if (target == null) {
                     Log.e("support", "dispatchDialogEvent: fail for " + model);
                     model.dismiss();
@@ -151,17 +154,17 @@ public class InjectorHelper {
         }
         int windowType = model.getLayerType();
         if (windowType == LayerModel.TYPE_SERIAL) {
-            model.attach(fragment.getInjectViewModel());
+            model.attach(viewModel);
             serialWindows.postAtFront(model);
         } else if (windowType == LayerModel.TYPE_SERIAL_NOTIFICATION) {
             LayerModel<?> layerModel = notificationWindows.getValue();
             if (layerModel != null) {
                 layerModel.dismiss();
             }
-            model.attach(fragment.getInjectViewModel());
+            model.attach(viewModel);
             notificationWindows.postAtFront(model);
         } else if (windowType == LayerModel.TYPE_ALL) {
-            model.attach(fragment.getInjectViewModel());
+            model.attach(viewModel);
             windows.setValue(model);
         }
     }
@@ -172,17 +175,17 @@ public class InjectorHelper {
         }
         int windowType = model.getLayerType();
         if (windowType == LayerModel.TYPE_SERIAL) {
-            model.attach(fragment.getInjectViewModel());
+            model.attach(viewModel);
             serialWindows.setValue(model);
         } else if (windowType == LayerModel.TYPE_SERIAL_NOTIFICATION) {
             LayerModel<?> layerModel = notificationWindows.getValue();
             if (layerModel != null) {
                 layerModel.dismiss();
             }
-            model.attach(fragment.getInjectViewModel());
+            model.attach(viewModel);
             notificationWindows.setValue(model);
         } else if (windowType == LayerModel.TYPE_ALL) {
-            model.attach(fragment.getInjectViewModel());
+            model.attach(viewModel);
             windows.setValue(model);
         }
     }

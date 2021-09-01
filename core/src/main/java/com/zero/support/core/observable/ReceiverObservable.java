@@ -26,6 +26,9 @@ public class ReceiverObservable extends SerialObservable<Intent> {
         }
     }
 
+    public IntentFilter getIntentFilter() {
+        return filter;
+    }
 
     protected void onActive() {
         AppGlobal.currentApplication().registerReceiver(receiver, filter);

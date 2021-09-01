@@ -12,8 +12,12 @@ import com.zero.support.core.AppGlobal;
 public final class InjectViewModel {
 
     private InjectFragment fragment;
-    private final InjectorHelper injectorHelper = new InjectorHelper();
+    private final InjectorHelper injectorHelper;
     private Injector injector;
+
+    public InjectViewModel() {
+        injectorHelper = new InjectorHelper(this);
+    }
 
     public final Injector getCurrentInjector() {
         return injector;
